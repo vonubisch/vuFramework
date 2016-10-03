@@ -13,6 +13,10 @@ abstract class Framework {
     public function view($name) {
         return Factory::view($name);
     }
+    
+    public function helper($name) {
+        return Factory::helper($name);
+    }
 
     public final function parameter($key) {
         return Configuration::read('route.parameters.' . $key);

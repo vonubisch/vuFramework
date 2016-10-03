@@ -45,7 +45,7 @@ class Factory {
     }
 
     public static function helper($name) {
-        
+        self::load(__FUNCTION__, $name);
     }
 
     public static function dao($name) {
