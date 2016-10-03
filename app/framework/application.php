@@ -18,14 +18,16 @@ class Application {
 
     public function __construct($config) {
         try {
-            Configuration::run($config);
+            Configuration::init($config);
 
             Configuration::write('enviroment', $this->setEnviroment(Configuration::get('enviroments')));
             $this->handleShutdown(Configuration::read('enviroment.shutdown'));
             $this->setErrors(Configuration::read('enviroment.errors'));
             $this->setLogging(Configuration::read('enviroment.logging'));
 
-            Configuration::extend('routes');
+            
+            Router::init(Configuration::get('routes'), Configuration::read('enviroment.folder'));
+            Configuration::write('route', Router::route());
 
             Debug::dump(Configuration::readAll());
 
@@ -33,7 +35,7 @@ class Application {
             //Configuration::write('route', Router::route());
         } catch (Exceptions $error) {
             $error->show(
-                    'development', Configuration::read('enviroment.errorlog'), Configuration::readAll()
+                    Configuration::read('enviroment.errors'), Configuration::read('enviroment.errorlog'), Configuration::readAll()
             );
         }
     }
@@ -50,7 +52,7 @@ class Application {
         if (!(bool) $bool):
             return;
         endif;
-        die('Site is temporarily shutdown.');
+        die(Exceptions::SHUTDOWN);
     }
 
     private function setErrors($bool = false) {

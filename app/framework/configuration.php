@@ -14,11 +14,13 @@ class Configuration {
     private static $separator = '.';
     private static $replace = '*';
 
-    public static function run($configFile) {
+    const CONFIG_ERROR_FILENOTFOUND = '';
+
+    public static function init($configFile) {
         if (file_exists($configFile)):
             self::$config = parse_ini_file($configFile, true);
         else:
-            throw new ConfigurationException("Configuration '{$configFile}' file not found");
+            throw new ConfigurationException(Exceptions::FILENOTFOUND . $configFile);
         endif;
     }
 
@@ -27,7 +29,7 @@ class Configuration {
         if (file_exists($path)):
             self::$config[$file] = parse_ini_file($path, true);
         else:
-            throw new ConfigurationException("Configuration '{$file}' file not found");
+            throw new ConfigurationException(Exceptions::FILENOTFOUND . $file);
         endif;
     }
 
@@ -36,7 +38,7 @@ class Configuration {
         if (file_exists($path)):
             return parse_ini_file($path, true);
         else:
-            throw new ConfigurationException("Configuration '{$file}' file not found");
+            throw new ConfigurationException(Exceptions::FILENOTFOUND . $file);
         endif;
     }
 
@@ -44,7 +46,7 @@ class Configuration {
         $config = self::$config;
         foreach (explode(self::$separator, $key) as $k):
             if (!array_key_exists($k, $config)):
-                throw new ConfigurationException("Key '{$key}' is not found");
+                throw new ConfigurationException(Exceptions::KEYNOTFOUND . $key);
             endif;
             $config = $config[$k];
         endforeach;
@@ -59,13 +61,16 @@ class Configuration {
         self::$config[$key] = $value;
     }
 
-    public static function classname() {
-        
+    public static function classname($key, $input = '') {
+        if (!isset(self::$config['classnames'][$key])):
+            throw new ConfigurationException(Exceptions::CLASSNAMENOTFOUND . $key);
+        endif;
+        return str_replace(self::$replace, $input, self::$config['classnames'][$key]);
     }
 
     public static function path($key, $input = '') {
         if (!isset(self::$config['paths'][$key])):
-            throw new ConfigurationException("Path '{$key}' is not found");
+            throw new ConfigurationException(Exceptions::PATHNOTFOUND . $key);
         endif;
         return str_replace(self::$replace, $input, self::$config['paths'][$key]);
     }

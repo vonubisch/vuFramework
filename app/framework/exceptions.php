@@ -157,30 +157,53 @@ class UserDeprecatedException extends Exceptions {
 
 class Exceptions extends Exception {
 
+    const SHUTDOWN = 'Site is temporarily shutdown.';
+    const SAFEMSG = 'Oops! An fatal error has occured.';
+    const FILENOTFOUND = 'File not found: ';
+    const KEYNOTFOUND = 'Key not found: ';
+    const PATHNOTFOUND = 'Path not found: ';
+    const CLASSNAMENOTFOUND = 'Classname not found: ';
+
     public function show($errors = false, $logfile = NULL, $configuration = array()) {
+        $code = $this->generateCode(microtime(true));
         if ((bool) $errors):
-            $msg = '<pre><strong>' .
-                    get_class($this) .
-                    ':</strong> ' .
-                    $this->getMessage() .
-                    PHP_EOL .
-                    '<small><em>' .
-                    $this->getTraceAsString() .
-                    '</em>' .
-                    PHP_EOL . PHP_EOL .
-                    print_r($configuration, true) .
-                    '</small></pre>';
+            $msg = $this->detailedMessage($configuration, $code);
         else:
-            $msg = '<pre><strong>' .
-                    get_class($this) .
-                    ':</strong> Fatal error!' .
-                    '</pre>';
+            $msg = $this->safeMessage($code);
         endif;
         if ((bool) ini_get('log_errors') && !is_null($logfile)) {
-            $log = date('Y/m/d H:i:s') . " [" . get_class($this) . "] " . $this->getMessage() . " ({$_SERVER['REQUEST_URI']})" . PHP_EOL;
-            error_log($log, 3, $logfile);
+            $this->logError($logfile, $code);
         }
         die($msg);
+    }
+
+    private function logError($file, $code) {
+        $date = date('Y-m-d H:i:s');
+        $class = get_class($this);
+        $msg = $this->getMessage();
+        $url = filter_input(INPUT_SERVER, 'REQUEST_URI');
+        $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
+        $ua = base64_encode(filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'));
+        $log = "{$date} [{$class}] {$msg} ({$url}) {{$ip},{$code},{$ua}}";
+        error_log($log . PHP_EOL, 3, $file);
+    }
+
+    private function detailedMessage($config, $code) {
+        $class = get_class($this);
+        $msg = $this->getMessage();
+        $EOL = PHP_EOL;
+        $trace = $this->getTraceAsString();
+        $cfg = print_r($config, true);
+        return "<pre><strong>{$class}</strong> {$msg}{$EOL}<sup>{$code}</sup>{$EOL}<small><em>{$trace}</em>{$EOL}{$EOL}{$cfg}</small></pre>";
+    }
+
+    private function safeMessage($code) {
+        $msg = self::SAFEMSG;
+        return "<pre><strong>{$msg}</strong><br><small><i>{$code}</i></small></pre>";
+    }
+
+    private function generateCode($string) {
+        return base64_encode($string);
     }
 
 }
