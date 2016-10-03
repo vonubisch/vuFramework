@@ -11,6 +11,7 @@
 class Router {
 
     public static $route = array();
+    public static $router = NULL;
 
     /**
      * @var array Array of all routes (incl. named routes).
@@ -39,17 +40,22 @@ class Router {
         '' => '[^/\.]++'
     );
 
-    public static function init($routes, $folder) {
+    public static function init($routes, $folder, $errorroute) {
         $router = new Router();
         $router->setBasePath($folder);
         foreach ($routes as $name => $route) {
             $router->map($route['request'], $route['url'], array($route['controller'], $route['method']), $name);
         }
         if ($router->match()) {
-            self::$route = $router::$route;
+            $route = $router::$route;
         } else {
-            throw new RoutingException('Match not made'); // 404
+            $route = $routes[$errorroute];
         }
+        $query = array();
+        parse_str(filter_input(INPUT_SERVER, 'QUERY_STRING'), $query);
+        $route['queries'] = $query;
+        self::$route = $route;
+        self::$router = $router;
     }
 
     public static function route() {
@@ -57,46 +63,12 @@ class Router {
     }
 
     /**
-     * Create router in one call from config.
-     *
-     * @param array $routes
-     * @param string $basePath
-     * @param array $matchTypes
-     */
-    public function __construct($routes = array(), $basePath = '', $matchTypes = array()) {
-        $this->addRoutes($routes);
-        $this->setBasePath($basePath);
-        $this->addMatchTypes($matchTypes);
-    }
-
-    /**
      * Retrieves all routes.
      * Useful if you want to process or display routes.
      * @return array All routes.
      */
-    public function getRoutes() {
-        return $this->routes;
-    }
-
-    /**
-     * Add multiple routes at once from array in the following format:
-     *
-     *   $routes = array(
-     *      array($method, $route, $target, $name)
-     *   );
-     *
-     * @param array $routes
-     * @return void
-     * @author Koen Punt
-     * @throws Exception
-     */
-    public function addRoutes($routes) {
-        if (!is_array($routes) && !$routes instanceof Traversable) {
-            throw new \Exception('Routes should be an array or an instance of Traversable');
-        }
-        foreach ($routes as $route) {
-            call_user_func_array(array($this, 'map'), $route);
-        }
+    public static function routes() {
+        return self::$router->routes;
     }
 
     /**
@@ -130,7 +102,7 @@ class Router {
         $this->routes[] = array($method, $route, $target, $name);
         if ($name) {
             if (isset($this->namedRoutes[$name])) {
-                throw new RoutingException("Can not redeclare route '{$name}'");
+                throw new RoutingException(Exceptions::CANNOTREDECLARE . $name);
             } else {
                 $this->namedRoutes[$name] = $route;
             }
@@ -149,18 +121,20 @@ class Router {
      * @return string The URL of the route with named parameters in place.
      * @throws Exception
      */
-    public function generate($routeName, array $params = array()) {
+    public static function generate($routeName, array $params = array()) {
+
+        $router = self::$router;
 
         // Check if named route exists
-        if (!isset($this->namedRoutes[$routeName])) {
-            throw new \Exception("Route '{$routeName}' does not exist.");
+        if (!isset($router->namedRoutes[$routeName])) {
+            throw new RoutingException(Exceptions::KEYNOTFOUND . $routeName);
         }
 
         // Replace named parameters
-        $route = $this->namedRoutes[$routeName];
+        $route = $router->namedRoutes[$routeName];
 
         // prepend base path to route url again
-        $url = $this->basePath . $route;
+        $url = $router->basePath . $route;
 
         if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
 
@@ -245,11 +219,11 @@ class Router {
                     }
                 }
                 self::$route = array(
-                    'request' => explode('|',$methods),
+                    'name' => $name,
+                    'request' => explode('|', $methods),
                     'controller' => $target[0],
                     'method' => $target[1],
                     'parameters' => $params,
-                    'name' => $name
                 );
                 return true;
             }

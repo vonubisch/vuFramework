@@ -14,8 +14,6 @@ class Configuration {
     private static $separator = '.';
     private static $replace = '*';
 
-    const CONFIG_ERROR_FILENOTFOUND = '';
-
     public static function init($configFile) {
         if (file_exists($configFile)):
             self::$config = parse_ini_file($configFile, true);
@@ -46,7 +44,7 @@ class Configuration {
         $config = self::$config;
         foreach (explode(self::$separator, $key) as $k):
             if (!array_key_exists($k, $config)):
-                throw new ConfigurationException(Exceptions::KEYNOTFOUND . $key);
+                return NULL;
             endif;
             $config = $config[$k];
         endforeach;

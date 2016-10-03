@@ -79,15 +79,7 @@ class FrameworkException extends Exceptions {
     
 }
 
-class FormatException extends Exceptions {
-    
-}
-
-class DeveloperException extends Exceptions {
-    
-}
-
-class ShutdownException extends Exceptions {
+class ServiceException extends Exceptions {
     
 }
 
@@ -159,10 +151,14 @@ class Exceptions extends Exception {
 
     const SHUTDOWN = 'Site is temporarily shutdown.';
     const SAFEMSG = 'Oops! An fatal error has occured.';
+    const ENVIROMENTFAILURE = 'Enviroment failure';
     const FILENOTFOUND = 'File not found: ';
     const KEYNOTFOUND = 'Key not found: ';
     const PATHNOTFOUND = 'Path not found: ';
     const CLASSNAMENOTFOUND = 'Classname not found: ';
+    const METHODNOTFOUND = 'Method not found: ';
+    const ARRAYEXPECTED = 'An array is expected';
+    const CANNOTREDECLARE = 'Cannot redeclare: ';
 
     public function show($errors = false, $logfile = NULL, $configuration = array()) {
         $code = $this->generateCode(microtime(true));

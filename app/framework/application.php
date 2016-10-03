@@ -8,31 +8,28 @@
  * @author     Bjorn Stefan von Ubisch <bs@vonubisch.com>
  * @copyright  2016 vonUbisch.com
  */
+session_start();
+
 require_once 'debug.php';
 require_once 'exceptions.php';
 require_once 'configuration.php';
 require_once 'router.php';
 require_once 'factory.php';
+require_once 'services.php';
 
 class Application {
 
     public function __construct($config) {
         try {
             Configuration::init($config);
-
             Configuration::write('enviroment', $this->setEnviroment(Configuration::get('enviroments')));
             $this->handleShutdown(Configuration::read('enviroment.shutdown'));
             $this->setErrors(Configuration::read('enviroment.errors'));
             $this->setLogging(Configuration::read('enviroment.logging'));
-
-            
-            Router::init(Configuration::get('routes'), Configuration::read('enviroment.folder'));
+            Router::init(
+                    Configuration::get('routes'), Configuration::read('enviroment.folder'), Configuration::read('enviroment.errorroute')
+            );
             Configuration::write('route', Router::route());
-
-            Debug::dump(Configuration::readAll());
-
-            //Router::dispatch(Configuration::read('routes'));
-            //Configuration::write('route', Router::route());
         } catch (Exceptions $error) {
             $error->show(
                     Configuration::read('enviroment.errors'), Configuration::read('enviroment.errorlog'), Configuration::readAll()
@@ -41,11 +38,25 @@ class Application {
     }
 
     public function start() {
-        Debug::dump('Application started');
+        try {
+            Debug::dump('Application started');
+            Debug::dump(Configuration::readAll());
+            Factory::base('framework');
+            Services::init(Configuration::read('services'));
+            Factory::controller(Configuration::read('route.controller'), Configuration::read('route.method'));
+        } catch (Exceptions $error) {
+            $error->show(
+                    Configuration::read('enviroment.errors'), Configuration::read('enviroment.errorlog'), Configuration::readAll()
+            );
+        }
     }
 
     private function setEnviroment($envs) {
-        return reset($envs);
+        $host = gethostname();
+        if (!isset($envs[$host])):
+            die(Exceptions::ENVIROMENTFAILURE);
+        endif;
+        return $envs[$host];
     }
 
     private function handleShutdown($bool = true) {
