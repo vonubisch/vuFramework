@@ -1,0 +1,31 @@
+# Error pages
+#ErrorDocument 401 http://local/vu2/error?code=401
+#ErrorDocument 403 http://webserver/vuframework/error?code=403
+#ErrorDocument 404 http://local/vu2/error?code=404
+#ErrorDocument 500 http://local/vu2/error?code=500
+# No directory indexing
+Options -Indexes 
+
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak|db|sql|sqlite|cache)$">
+    order allow,deny
+    deny from all
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js|css|xml|gz)$">
+        Header append Vary: Accept-Encoding
+    </FilesMatch>
+    # Cache control
+    <FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf|js|css|bmp|tiff)$">
+        Header set Cache-Control "max-age=2592000"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !\.(css|gif|ico|jpg|js|png|swf|txt|jpeg|tiff|bmp)$
+    RewriteRule ^(.*)$ index.php/$1 [L]
+    RewriteRule app/ index.php/$1 [L]
+</IfModule>
