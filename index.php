@@ -10,5 +10,5 @@
  */
 require_once 'app/framework/application.php';
 
-$app = new Application();
+$app = new Application('app/config/app.ini');
 $app->start();

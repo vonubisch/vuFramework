@@ -31,6 +31,15 @@ class Configuration {
         endif;
     }
 
+    public static function get($file) {
+        $path = self::path('config', $file);
+        if (file_exists($path)):
+            return parse_ini_file($path, true);
+        else:
+            throw new ConfigurationException("Configuration '{$file}' file not found");
+        endif;
+    }
+
     public static function read($key) {
         $config = self::$config;
         foreach (explode(self::$separator, $key) as $k):
@@ -46,8 +55,8 @@ class Configuration {
         return self::$config;
     }
 
-    public static function write() {
-        
+    public static function write($key, $value) {
+        self::$config[$key] = $value;
     }
 
     public static function classname() {

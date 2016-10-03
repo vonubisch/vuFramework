@@ -157,53 +157,26 @@ class UserDeprecatedException extends Exceptions {
 
 class Exceptions extends Exception {
 
-    public function shutdown($bool) {
-        if (!(bool) $bool):
-            return;
+    public function show($errors = false, $logfile = NULL, $configuration = array()) {
+        if ((bool) $errors):
+            $msg = '<pre><strong>' .
+                    get_class($this) .
+                    ':</strong> ' .
+                    $this->getMessage() .
+                    PHP_EOL .
+                    '<small><em>' .
+                    $this->getTraceAsString() .
+                    '</em>' .
+                    PHP_EOL . PHP_EOL .
+                    print_r($configuration, true) .
+                    '</small></pre>';
+        else:
+            $msg = '<pre><strong>' .
+                    get_class($this) .
+                    ':</strong> Fatal error!' .
+                    '</pre>';
         endif;
-        $this->reporting('production');
-        throw new ShutdownException('Site is temporarily shutdown');
-    }
-
-    public static function reporting($env = 'production') {
-        ini_set('log_errors', 1);
-        switch ($env) {
-            case 'production':
-                error_reporting(0);
-                ini_set("display_errors", 0);
-                break;
-            case 'development':
-                error_reporting(E_ALL);
-                ini_set("display_errors", 1);
-                break;
-        }
-    }
-
-    public function show($env = 'production', $logfile = NULL, $configuration = array()) {
-        $msg = '';
-        switch ($env) {
-            case 'development':
-                $msg = '<pre><strong>' .
-                        get_class($this) .
-                        ':</strong> ' .
-                        $this->getMessage() .
-                        PHP_EOL .
-                        '<small><em>' .
-                        $this->getTraceAsString() .
-                        '</em>' .
-                        PHP_EOL . PHP_EOL .
-                        print_r($configuration, true) .
-                        '</small></pre>';
-                break;
-            default:
-            case 'production':
-                $msg = '<pre><strong>' .
-                        get_class($this) .
-                        ':</strong> Fatal error!' .
-                        '</pre>';
-                break;
-        }
-        if (!is_null($logfile)) {
+        if ((bool) ini_get('log_errors') && !is_null($logfile)) {
             $log = date('Y/m/d H:i:s') . " [" . get_class($this) . "] " . $this->getMessage() . " ({$_SERVER['REQUEST_URI']})" . PHP_EOL;
             error_log($log, 3, $logfile);
         }

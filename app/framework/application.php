@@ -16,15 +16,16 @@ require_once 'factory.php';
 
 class Application {
 
-    public function __construct() {
+    public function __construct($config) {
         try {
-            Configuration::run('app/config/app.ini');
-            Configuration::extend('enviroments');
+            Configuration::run($config);
+
+            Configuration::write('enviroment', $this->setEnviroment(Configuration::get('enviroments')));
+            $this->handleShutdown(Configuration::read('enviroment.shutdown'));
+            $this->setErrors(Configuration::read('enviroment.errors'));
+            $this->setLogging(Configuration::read('enviroment.logging'));
+
             Configuration::extend('routes');
-            Configuration::extend('settings');
-
-            Exceptions::reporting(Configuration::read('enviroments'));
-
 
             Debug::dump(Configuration::readAll());
 
@@ -32,7 +33,7 @@ class Application {
             //Configuration::write('route', Router::route());
         } catch (Exceptions $error) {
             $error->show(
-                    'development', NULL, Configuration::readAll()
+                    'development', Configuration::read('enviroment.errorlog'), Configuration::readAll()
             );
         }
     }
@@ -41,8 +42,33 @@ class Application {
         Debug::dump('Application started');
     }
 
-    private function shutdown() {
-        
+    private function setEnviroment($envs) {
+        return reset($envs);
+    }
+
+    private function handleShutdown($bool = true) {
+        if (!(bool) $bool):
+            return;
+        endif;
+        die('Site is temporarily shutdown.');
+    }
+
+    private function setErrors($bool = false) {
+        if ((bool) $bool) {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+        } else {
+            error_reporting(0);
+            ini_set('display_errors', 0);
+        }
+    }
+
+    private function setLogging($bool = false) {
+        if ((bool) $bool) {
+            ini_set('log_errors', 1);
+        } else {
+            ini_set('log_errors', 0);
+        }
     }
 
 }
