@@ -10,7 +10,7 @@
  */
 class Factory {
 
-    public static function controller($name, $method, $parameters = array()) {
+    public static function controller($name, $method) {
         self::load(__FUNCTION__, $name);
         $classname = self::classname(__FUNCTION__, $name);
         $object = new $classname();
@@ -21,10 +21,15 @@ class Factory {
         return $object;
     }
 
-    public static function model($name) {
+    public static function model($name, $properties = array()) {
         self::load(__FUNCTION__, $name);
         $classname = self::classname(__FUNCTION__, $name);
         $object = new $classname();
+        if ($properties):
+            foreach ($properties as $k => $v):
+                $object->{$k} = $v;
+            endforeach;
+        endif;
         return $object;
     }
 
@@ -32,6 +37,8 @@ class Factory {
         self::load(__FUNCTION__, $name);
         $classname = self::classname(__FUNCTION__, $name);
         $object = new $classname();
+        self::checkMethod($object, Configuration::read('magic.constructor'));
+        $object->{Configuration::read('magic.constructor')}();
         return $object;
     }
 
@@ -47,9 +54,18 @@ class Factory {
     public static function helper($name) {
         self::load(__FUNCTION__, $name);
     }
+    
+    public static function library($name) {
+        self::load(__FUNCTION__, $name);
+    }
 
     public static function dao($name) {
-        
+        self::load(__FUNCTION__, $name);
+        $classname = self::classname(__FUNCTION__, $name);
+        $object = new $classname();
+        self::checkMethod($object, Configuration::read('magic.constructor'));
+        $object->{Configuration::read('magic.constructor')}();
+        return $object;
     }
 
     public static function renderer($name) {

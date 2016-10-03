@@ -9,11 +9,19 @@ abstract class Framework {
     public final function service($name) {
         return Services::get($name);
     }
-    
+
+    public function model($name, $properties = array()) {
+        return Factory::model($name, $properties);
+    }
+
+    public function dao($name) {
+        return Factory::dao($name);
+    }
+
     public function view($name) {
         return Factory::view($name);
     }
-    
+
     public function helper($name) {
         return Factory::helper($name);
     }
