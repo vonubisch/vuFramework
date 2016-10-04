@@ -14,9 +14,12 @@ abstract class DAO {
         if (is_null($name)):
             return $this->model;
         endif;
-        // @TODO: include model if not included
-        $this->model = Configuration::classname(__FUNCTION__, $name);
+        $this->model = Factory::model($name);
         return $this;
+    }
+
+    public final function modelName() {
+        return get_class($this->model());
     }
 
     public final function database($name) {

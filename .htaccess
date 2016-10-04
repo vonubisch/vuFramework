@@ -29,3 +29,5 @@ Options -Indexes
     RewriteRule ^(.*)$ index.php/$1 [L]
     RewriteRule app/ index.php/$1 [L]
 </IfModule>
+
+ErrorDocument 500 "<h2>Application error</h2>"
