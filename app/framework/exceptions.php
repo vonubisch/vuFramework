@@ -87,6 +87,10 @@ class HelperException extends Exceptions {
     
 }
 
+class DriverException extends Exceptions {
+    
+}
+
 class LanguageException extends Exceptions {
     
 }

@@ -14,6 +14,7 @@ require_once 'debug.php';
 require_once 'exceptions.php';
 require_once 'configuration.php';
 require_once 'router.php';
+require_once 'databases.php';
 require_once 'factory.php';
 require_once 'services.php';
 
@@ -42,6 +43,7 @@ class Application {
             Debug::dump('Application started');
             Debug::dump(Configuration::readAll());
             Factory::base('framework');
+            Databases::init(Configuration::get('databases'));
             Services::init(Configuration::read('services'));
             Factory::controller(Configuration::read('route.controller'), Configuration::read('route.method'));
         } catch (Exceptions $error) {

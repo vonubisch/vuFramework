@@ -12,5 +12,9 @@ abstract class DAO {
         $this->model = Configuration::classname(__FUNCTION__, $name);
         return $this;
     }
+    
+    public final function database($name) {
+        return Databases::connect($name);
+    }
 
 }

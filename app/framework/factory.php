@@ -71,6 +71,15 @@ class Factory {
         return $object;
     }
 
+    public static function driver($name, $options = array()) {
+        self::load(__FUNCTION__, $name);
+        $classname = self::classname(__FUNCTION__, $name);
+        $object = new $classname();
+        self::checkMethod($object, Configuration::read('magic.constructor'));
+        $object->{Configuration::read('magic.constructor')}($options);
+        return $object;
+    }
+
     private static function checkMethod($object, $method) {
         if (!method_exists($object, $method)):
             throw new FactoryException(Exceptions::METHODNOTFOUND . $method);
