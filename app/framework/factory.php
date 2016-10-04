@@ -30,6 +30,9 @@ class Factory {
                 $object->{$k} = $v;
             endforeach;
         endif;
+        if (method_exists($object, Configuration::read('magic.constructor'))):
+            $object->{Configuration::read('magic.constructor')}();
+        endif;
         return $object;
     }
 
@@ -54,7 +57,7 @@ class Factory {
     public static function helper($name) {
         self::load(__FUNCTION__, $name);
     }
-    
+
     public static function library($name) {
         self::load(__FUNCTION__, $name);
     }
@@ -68,10 +71,6 @@ class Factory {
         return $object;
     }
 
-    public static function renderer($name) {
-        
-    }
-
     private static function checkMethod($object, $method) {
         if (!method_exists($object, $method)):
             throw new FactoryException(Exceptions::METHODNOTFOUND . $method);
@@ -83,7 +82,7 @@ class Factory {
         if (!class_exists(self::classname($type))):
             self::base($type);
         endif;
-        if (self::exists($type, $filepath)):
+        if (self::fileExists($type, $filepath)):
             require_once self::path($type, $filepath);
         else:
             throw new FactoryException(Exceptions::FILENOTFOUND . $filepath);
@@ -91,7 +90,7 @@ class Factory {
     }
 
     public static function base($file) {
-        if (self::exists(__FUNCTION__, $file)):
+        if (self::fileExists(__FUNCTION__, $file)):
             require_once self::path(__FUNCTION__, $file);
         else:
             throw new FactoryException(Exceptions::FILENOTFOUND . $file);
@@ -102,7 +101,7 @@ class Factory {
         return end((explode(Configuration::read('magic.delimiter'), $name)));
     }
 
-    private static function exists($type, $file) {
+    private static function fileExists($type, $file) {
         return file_exists(self::path($type, $file));
     }
 
