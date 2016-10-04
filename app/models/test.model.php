@@ -1,15 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of test
- *
- * @author Bjorn
+ * @package    vuFramework
+ * @version    v8.0
+ * @author     Bjorn Stefan von Ubisch <bs@vonubisch.com>
+ * @copyright  2016 vonUbisch.com
  */
 class TestModel extends Model {
     //put your code here

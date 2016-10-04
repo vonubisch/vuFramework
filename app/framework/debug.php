@@ -45,4 +45,9 @@ class Debug {
         endif;
     }
 
+    public static function log($data) {
+        $file = 'app/logs/debug.log';
+        file_put_contents($file, print_r($data, true));
+    }
+
 }

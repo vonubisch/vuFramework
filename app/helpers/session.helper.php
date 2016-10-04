@@ -1,18 +1,14 @@
 <?php
 
 /**
- * Sessions
- *
- * Session handler class
- *
- * @package    vuFramework 3.0
+ * @package    vuFramework
+ * @version    v8.0
  * @author     Bjorn Stefan von Ubisch <bs@vonubisch.com>
- * @copyright  2013 Carlsen Group - vonUbisch.com
- * @todo       
+ * @copyright  2016 vonUbisch.com
  */
 class Session {
 
-    private static $salt = 'Zgu0MW&T$@HKDSdsd9@[@&RtoUI()&*7LDSH/$#,.dsp[rewr^%wewd8u390-uSOI":23uB';
+    private static $salt = 'Zgu0MW&T$@HKDSdsd9@[@&SDtoUI()&*7LDSH/$#,.dsp[rewr^%wewd8u390-uSOI":23uB';
 
     public static function close() {
         session_destroy();

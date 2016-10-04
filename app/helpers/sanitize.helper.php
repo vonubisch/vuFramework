@@ -1,14 +1,10 @@
 <?php
 
 /**
- * Sanitize
- *
- * Extending PHP built-in functions
- *
- * @package    vuFramework 3.0
+ * @package    vuFramework
+ * @version    v8.0
  * @author     Bjorn Stefan von Ubisch <bs@vonubisch.com>
- * @copyright  2013 Carlsen Group - vonUbisch.com
- * @todo       
+ * @copyright  2016 vonUbisch.com
  */
 class Sanitize {
 

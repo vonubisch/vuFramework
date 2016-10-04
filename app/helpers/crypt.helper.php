@@ -1,15 +1,11 @@
 <?php
 
 /**
- * Crypt
- *
- * En- and de-crypt for strings and urls
- *
- * @package    vuFramework 3.0
+ * @package    vuFramework
+ * @version    v8.0
  * @author     Bjorn Stefan von Ubisch <bs@vonubisch.com>
- * @todo       
+ * @copyright  2016 vonUbisch.com
  */
-
 class Crypt {
 
     public static $key, $ivs, $iv;
