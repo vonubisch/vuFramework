@@ -12,8 +12,16 @@ class TestView extends View {
         
     }
 
-    public function test() {
-        Debug::dump('View->test() loaded');
+    public function test($binds) {
+        $r = $this->renderer('templates');
+
+        $r->layout('layouts/layout.html', function() use ($r) {
+            return $r->loadTemplate('navigation.html') .
+                    $r->loadTemplate('container.html');
+        });
+        $html = $r->apply($binds);
+        Debug::dump(htmlentities($html));
+        print $html;
     }
 
 }

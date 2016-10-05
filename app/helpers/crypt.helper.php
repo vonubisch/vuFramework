@@ -52,7 +52,7 @@ class Crypt {
                 return mcrypt_create_iv(self::$ivs);
 
             default:
-                throw new vuHelperException("$name cannot be called");
+                throw new HelperException("$name cannot be called");
         }
     }
 

@@ -1116,7 +1116,7 @@ class Parsedown {
 //
 //    function __construct() {
 //        if (parent::version < '1.5.0') {
-//            throw new vuHelperException('ParsedownExtra requires a later version of Parsedown');
+//            throw new HelperException('ParsedownExtra requires a later version of Parsedown');
 //        }
 //        $this->BlockTypes[':'] [] = 'DefinitionList';
 //        $this->BlockTypes['*'] [] = 'Abbreviation';

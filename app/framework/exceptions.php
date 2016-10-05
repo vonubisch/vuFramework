@@ -83,6 +83,10 @@ class ServiceException extends Exceptions {
     
 }
 
+class RendererException extends Exceptions {
+    
+}
+
 class HelperException extends Exceptions {
     
 }

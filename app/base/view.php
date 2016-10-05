@@ -9,4 +9,9 @@
 abstract class View extends Framework {
 
     abstract public function run();
+
+    public final function renderer($name, $options = array()) {
+        return Factory::renderer($name, $options);
+    }
+
 }

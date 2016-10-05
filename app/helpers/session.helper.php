@@ -8,8 +8,6 @@
  */
 class Session {
 
-    private static $salt = 'Zgu0MW&T$@HKDSdsd9@[@&SDtoUI()&*7LDSH/$#,.dsp[rewr^%wewd8u390-uSOI":23uB';
-
     public static function close() {
         session_destroy();
     }

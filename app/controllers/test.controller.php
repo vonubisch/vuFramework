@@ -34,7 +34,13 @@ class TestController extends Controller {
 
         Debug::dump($this->dao('test')->model('test')->test());
 
-        $this->view('test')->test(array('lol1', 'lol2'));
+        $this->view('test')->test(
+                array(
+                    'app' => array('sitename' => 'vuFramework layout'),
+                    'navigation' => array(array('title' => 'Link one', 'url' => 'http://www.google1.nl'), array('title' => 'Link two', 'url' => 'http://www.google2.nl')),
+                    'articles' => array(array('title' => 'Test title 1', 'description' => 'BLABLABLA'), array('title' => 'Test title 2', 'description' => 'BLABsdffdsfLABLA'))
+                )
+        );
     }
 
 }

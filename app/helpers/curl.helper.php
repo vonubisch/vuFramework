@@ -28,10 +28,10 @@ class cURL {
 
     public function __construct($url = NULL) {
         if (!function_exists('curl_init')) {
-            throw new vuHelperException("Curl PHP package not installed");
+            throw new HelperException("Curl PHP package not installed");
         }
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new vuHelperException("cURL URL '{$url}' is not a valid URL");
+            throw new HelperException("cURL URL '{$url}' is not a valid URL");
         }
         $this->url = $url;
         $this->handle = curl_init();
