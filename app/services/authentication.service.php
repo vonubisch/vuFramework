@@ -23,17 +23,11 @@ class AuthenticationService extends Service {
         endif;
         $this->helper('cookie');
         $this->helper('session');
-        $sessionid = NULL;
-        if ($this->useCookies && Cookie::exist($this->key)):
-            $sessionid = Cookie::read($this->key);
-        endif;
-        if ($this->useSessions && Session::exist($this->key)):
-            $sessionid = Session::read($this->key);
-        endif;
-        if (is_null($sessionid)):
+        $sessionid = $this->getSessionID();
+        if (!$this->getSessionID()):
             return; // No sessions found in cookies or sessions
         endif;
-        $user = $this->dao('authentication')->readBySessionID($sessionid);
+        $user = $this->readBySessionID($sessionid);
         if (!$user):
             return; // Session ID not found
         endif;
@@ -45,44 +39,31 @@ class AuthenticationService extends Service {
             return;
         endif;
         $this->logout();
-        $user = $this->dao('authentication')->readByUsername($username);
-        if (empty($user->id)) {
+        $user = $this->readByUsername($username);
+        if (!$user) {
             return; // User not found
         }
         if (!$this->checkPassword($password, $user->password)):
             return; // Password does not match
         endif;
-        $sessionid = Session::generateId();
-        if (!$this->dao('authentication')->updateSessionByUserID($user->id, $sessionid)):
+        $sessionid = $this->generateID();
+        if (!$this->updateSessionByUserID($user->id, $sessionid)):
             return; // Updating sessionid failed
         endif;
-        Session::write($this->key, $sessionid);
+        $this->writeSession($this->key, $sessionid);
         if ($cookie):
-            Cookie::write($this->key, $sessionid);
+            $this->writeCookie($this->key, $sessionid);
         endif;
-        $user->sessionid = $sessionid;
         $this->setUser($user);
     }
 
     public function logout() {
-        if (!Session::exist($this->key)):
+        if (!$this->existSession($this->key)):
             return false;
         endif;
-        $this->dao('authentication')->updateSessionBySessionID(Session::read($this->key), '');
-        Session::destroy($this->key);
-        Cookie::destroy($this->key);
-    }
-
-    private function checkPassword($input, $stored) {
-        $this->library('authentication/hasher.php');
-        $hasher = new Hasher();
-        return $hasher->CheckPassword($input, $stored);
-    }
-
-    private function setUser($user) {
-        $this->user['id'] = $user->id;
-        $this->user['name'] = $user->username;
-        $this->user['authenticated'] = true;
+        $this->updateSessionBySessionID($this->readSession($this->key), '');
+        $this->destroySession($this->key);
+        $this->destroyCookie($this->key);
     }
 
     public function id() {
@@ -99,6 +80,81 @@ class AuthenticationService extends Service {
 
     public function user() {
         return $this->user;
+    }
+
+    private function getSessionID() {
+        $sessionid = NULL;
+        if ($this->useCookies && $this->existCookie($this->key)):
+            $sessionid = $this->readCookie($this->key);
+        endif;
+        if ($this->useSessions && $this->existSession($this->key)):
+            $sessionid = $this->readSession($this->key);
+        endif;
+        return $sessionid;
+    }
+
+    private function readBySessionID($sessionid) {
+        return $this->dao('authentication')->readBySessionID($sessionid);
+    }
+
+    private function readByUsername($username) {
+        return $this->dao('authentication')->readByUsername($username);
+    }
+
+    private function updateSessionByUserID($userid, $sessionid) {
+        return $this->dao('authentication')->updateSessionByUserID($userid, $sessionid);
+    }
+
+    private function updateSessionBySessionID($sessionid, $empty) {
+        return $this->dao('authentication')->updateSessionBySessionID($sessionid, $empty);
+    }
+
+    private function existCookie($key) {
+        return Cookie::exist($key);
+    }
+
+    private function readCookie($key) {
+        return Cookie::read($key);
+    }
+
+    private function writeCookie($key, $value) {
+        return Cookie::write($key, $value);
+    }
+
+    private function destroyCookie($key) {
+        return Cookie::destroy($key);
+    }
+
+    private function existSession($key) {
+        return Session::exist($key);
+    }
+
+    private function readSession($key) {
+        return Session::read($key);
+    }
+
+    private function writeSession($key, $value) {
+        return Session::write($key, $value);
+    }
+
+    private function destroySession($key) {
+        return Session::destroy($key);
+    }
+
+    private function generateID() {
+        return Session::generateId();
+    }
+
+    private function checkPassword($input, $stored) {
+        $this->library('authentication/hasher.php');
+        $hasher = new Hasher();
+        return $hasher->CheckPassword($input, $stored);
+    }
+
+    private function setUser($user) {
+        $this->user['id'] = $user->id;
+        $this->user['name'] = $user->username;
+        $this->user['authenticated'] = true;
     }
 
 }

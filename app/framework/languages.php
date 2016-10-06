@@ -19,13 +19,14 @@ class Languages {
         self::$initiated = true;
         self::$selected = self::$defaultLang;
         self::$dictionairy = Factory::language(self::$selected);
+        Debug::dump(self::$dictionairy);
     }
 
     public static function get($key) {
         if (!self::$initiated):
-            self::init();
+            //self::init();
         endif;
-        return self::$dictionairy[$key];
+        //return self::$dictionairy[$key];
     }
 
 }
