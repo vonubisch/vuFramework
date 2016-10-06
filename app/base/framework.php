@@ -40,8 +40,8 @@ abstract class Framework {
         return Configuration::read('route.queries.' . $key);
     }
 
-    public final function url($name) {
-        return Router::generate($name);
+    public final function url($name, $parameters = array()) {
+        return Router::generate($name, $parameters);
     }
 
     public final function redirect($route = NULL, $url = false) {

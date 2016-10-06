@@ -13,11 +13,13 @@ class TestView extends View {
     }
 
     public function test($binds) {
+        Debug::dump($binds);
         $r = $this->renderer('templates');
 
         $r->layout('layouts/layout.html', function() use ($r) {
-            return $r->loadTemplate('navigation.html') .
-                    $r->loadTemplate('container.html');
+            return $r->container('containers/container.html', function() use ($r) {
+                        return $r->loadTemplate('navigation.html');
+                    });
         });
         $html = $r->apply($binds);
         Debug::dump(htmlentities($html));

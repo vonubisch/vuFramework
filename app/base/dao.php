@@ -26,4 +26,8 @@ abstract class DAO {
         return Databases::connect($name);
     }
 
+    public final function url($name, $parameters = array()) {
+        return Router::generate($name, $parameters);
+    }
+
 }

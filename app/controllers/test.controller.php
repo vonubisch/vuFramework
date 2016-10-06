@@ -36,8 +36,8 @@ class TestController extends Controller {
 
         $this->view('test')->test(
                 array(
-                    'app' => array('sitename' => 'vuFramework layout'),
-                    'navigation' => array(array('title' => 'Link one', 'url' => 'http://www.google1.nl'), array('title' => 'Link two', 'url' => 'http://www.google2.nl')),
+                    'app' => Configuration::readAll(),
+                    'navigation' => $this->dao('test.navigation')->getItems(),
                     'articles' => array(array('title' => 'Test title 1', 'description' => 'BLABLABLA'), array('title' => 'Test title 2', 'description' => 'BLABsdffdsfLABLA'))
                 )
         );
