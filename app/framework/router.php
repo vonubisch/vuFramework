@@ -58,7 +58,7 @@ class Router {
         self::$router = $router;
     }
 
-    public static function route() {
+    public static function data() {
         return self::$route;
     }
 

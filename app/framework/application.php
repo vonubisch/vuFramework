@@ -12,6 +12,7 @@ require_once 'debug.php';
 require_once 'exceptions.php';
 require_once 'configuration.php';
 require_once 'router.php';
+require_once 'request.php';
 require_once 'databases.php';
 require_once 'factory.php';
 require_once 'services.php';
@@ -28,7 +29,9 @@ class Application {
             Router::init(
                     Configuration::get('routes'), Configuration::read('enviroment.folder'), Configuration::read('enviroment.errorroute')
             );
-            Configuration::write('route', Router::route());
+            Configuration::write('route', Router::data());
+            Request::init();
+            Configuration::write('request', Request::data());
         } catch (Exceptions $error) {
             $error->show(
                     Configuration::read('enviroment.errors'), Configuration::read('enviroment.errorlog'), Configuration::readAll()

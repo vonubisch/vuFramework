@@ -22,7 +22,10 @@ class AuthenticationController extends Controller {
     }
 
     public function login() {
-        $this->view('default')->content('login', ['template' => 'login']);
+        $this->view('default')->content('login', [
+            'template' => 'login',
+            'navigation' => $this->dao('test.navigation')->getItems()
+        ]);
     }
 
 }

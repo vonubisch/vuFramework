@@ -14,7 +14,7 @@ class TestView extends View {
 
     public function test($binds) {
         $this->setHeader('Content-Type', 'utf8');
-        $binds['app'] = Configuration::safe();
+        $binds['app'] = Configuration::readAll();
         $binds['user'] = $this->service('user')->data();
         $r = $this->renderer('templates');
         $r->layout('layouts/layout.html', function() use ($r) {

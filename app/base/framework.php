@@ -54,35 +54,13 @@ abstract class Framework {
         header('Location: ' . $url);
         exit;
     }
-
-    public final function request($request = NULL) {
-        if (is_null($request)):
-            return strtoupper($_SERVER['REQUEST_METHOD']);
-        endif;
-        return (strtoupper($_SERVER['REQUEST_METHOD']) === strtoupper($request));
+    
+    public final function post() {
+        
     }
-
-    public final function post($key = NULL, $filter = FILTER_DEFAULT, $flags = NULL) {
-        if (is_null($key)):
-            return $this->request(__FUNCTION__);
-        elseif (empty($_POST[$key])):
-            return '';
-        endif;
-        return trim(filter_input(INPUT_POST, $key, $filter, $flags));
-    }
-
-    public final function get($key = NULL, $filter = FILTER_DEFAULT, $flags = NULL) {
-        if (is_null($key)):
-            return $this->request(__FUNCTION__);
-        endif;
-        if (empty($_GET[$key])):
-            return false;
-        endif;
-        return trim(filter_input(INPUT_GET, $key, $filter, $flags));
-    }
-
-    public final function ssl() {
-        return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443);
+    
+    public final function get() {
+        
     }
 
 }
