@@ -23,6 +23,12 @@ class NavigationDAO extends DAO {
                 'submenu' => false
             ),
             array(
+                'id' => 1,
+                'title' => 'Login',
+                'url' => $this->url('login'),
+                'submenu' => false
+            ),
+            array(
                 'id' => 2,
                 'title' => 'Test',
                 'url' => $this->url('test', array('test' => 'yes')),

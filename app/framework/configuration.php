@@ -55,6 +55,12 @@ class Configuration {
         return self::$config;
     }
 
+    public static function safe() {
+        $array = array();
+        $array = $array + self::read('application');
+        return $array;
+    }
+
     public static function write($key, $value) {
         self::$config[$key] = $value;
     }

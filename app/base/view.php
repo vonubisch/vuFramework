@@ -40,7 +40,7 @@ abstract class View extends Framework {
         switch ($key):
             case 'Content-Type':
                 $type = $this->headers('Content-Type', $value);
-                if(!is_null($type)):
+                if (!is_null($type)):
                     $value = $type;
                 endif;
                 break;
