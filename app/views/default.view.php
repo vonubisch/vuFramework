@@ -17,16 +17,9 @@ class DefaultView extends View {
         $variables = $binds[0];
         $variables['app'] = Configuration::readAll();
         $variables['user'] = $this->service('authentication')->user();
-        $r = $this->renderer('templates');
-        $r->layout('layouts/layout.html', function() use ($r, $name) {
-            return $r->container('containers/container.html', function() use ($r, $name) {
-                        return $r->loadTemplate('navigation.html') .
-                                $r->loadTemplate($name . '.html') .
-                                $r->loadTemplate('debug.html');
-                    });
-        });
-        $html = $r->apply($variables);
-        print $html;
+        $variables['test'] = 'Testing123';
+        $twig = $this->renderer('twig');
+        echo $twig->render($name . '.twig', $variables);
     }
 
 }

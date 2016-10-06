@@ -56,11 +56,11 @@ class TemplatesRenderer extends Renderer {
 
     public function parse() {
         $this->mFilter["_DEFAULT_"] = function ($input) {
-            return htmlspecialchars($input);
+            return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
         };
         // Raw is only a pseudo-filter. If it is not in the chain of filters, __DEFAULT__ will be appended to the filter
         $this->mFilter["html"] = function ($input) {
-            return htmlspecialchars($input);
+            return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
         };
         $this->mFilter["raw"] = function ($input) {
             return $input;
@@ -68,9 +68,9 @@ class TemplatesRenderer extends Renderer {
         $this->mFilter["uppercase"] = function ($input) {
             return strtoupper($input);
         };
-        
-        $this->mFilter["language"] = function ($input) {
-            return Languages::get($input);
+
+        $this->mFilter["link"] = function ($input) {
+            return Router::generate($input);
         };
 
         $this->mFilter["dump"] = function ($input) {
@@ -200,8 +200,9 @@ class TemplatesRenderer extends Renderer {
                 }
             }
         }
-        if (is_object($value) && !method_exists($value, "__toString"))
+        if (is_object($value) && !method_exists($value, "__toString")) {
             $value = "##ERR:OBJECT_IN_TEXT:[{$name}]ON[{$cur}]:" . gettype($value) . "###";
+        }
         return $value;
     }
 
@@ -296,6 +297,10 @@ class TemplatesRenderer extends Renderer {
         $content = $this->_parseBlock($context, $content, $softFail);
         $content = $this->_parseValueOfTags($context, $content, $softFail);
         return $content;
+    }
+
+    private function _runTest($context, $content, $cmdParam, $softFail = TRUE) {
+        Debug::dump(func_get_args());
     }
 
     private function _parseBlock($context, $block, $softFail = TRUE) {
