@@ -28,6 +28,10 @@ abstract class Framework {
         return Factory::view($name);
     }
 
+    public final function library($name) {
+        return Factory::library($name);
+    }
+
     public final function helper($name) {
         return Factory::helper($name);
     }
@@ -54,13 +58,17 @@ abstract class Framework {
         header('Location: ' . $url);
         exit;
     }
-    
-    public final function post() {
-        
+
+    public final function request($request) {
+        return Request::method($request);
     }
-    
-    public final function get() {
-        
+
+    public final function post($key = NULL, $filter = FILTER_DEFAULT, $flags = NULL) {
+        return Request::post($key, $filter, $flags);
+    }
+
+    public final function get($key = NULL, $filter = FILTER_DEFAULT, $flags = NULL) {
+        return Request::get($key, $filter, $flags);
     }
 
 }

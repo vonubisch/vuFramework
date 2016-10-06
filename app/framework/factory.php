@@ -59,7 +59,11 @@ class Factory {
     }
 
     public static function library($name) {
-        self::load(__FUNCTION__, $name);
+        if (self::fileExists(__FUNCTION__, $name)):
+            require_once self::path(__FUNCTION__, $name);
+        else:
+            throw new FactoryException(Exceptions::FILENOTFOUND . $name);
+        endif;
     }
 
     public static function dao($name) {

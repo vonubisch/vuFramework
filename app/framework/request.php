@@ -13,7 +13,7 @@ class Request {
     private static $data = array();
 
     public static function init() {
-        self::$data['url'] = self::url();
+        self::$data['url'] = self::url($_SERVER);
         self::$data['queries'] = self::getQueries();
         self::$data['request'] = self::method();
         self::$data['get'] = self::method('get');
@@ -35,7 +35,7 @@ class Request {
 
     public static function post($key = NULL, $filter = FILTER_DEFAULT, $flags = NULL) {
         if (is_null($key)):
-            return $this->request(__FUNCTION__);
+            return self::method(__FUNCTION__);
         elseif (empty($_POST[$key])):
             return '';
         endif;
@@ -44,7 +44,7 @@ class Request {
 
     public static function get($key = NULL, $filter = FILTER_DEFAULT, $flags = NULL) {
         if (is_null($key)):
-            return $this->request(__FUNCTION__);
+            return self::method(__FUNCTION__);
         endif;
         if (empty($_GET[$key])):
             return false;
@@ -63,7 +63,7 @@ class Request {
     }
 
     private static function urlOrigin($s, $use_forwarded_host = false) {
-        $ssl = (!empty($s['HTTPS']) && $s['HTTPS'] == 'on' );
+        $ssl = self::ssl();
         $sp = strtolower($s['SERVER_PROTOCOL']);
         $protocol = substr($sp, 0, strpos($sp, '/')) . ( ( $ssl ) ? 's' : '' );
         $port = $s['SERVER_PORT'];
@@ -73,8 +73,8 @@ class Request {
         return $protocol . '://' . $host;
     }
 
-    private static function url($use_forwarded_host = false) {
-        return self::urlOrigin($_SERVER, $use_forwarded_host) . $_SERVER['REQUEST_URI'];
+    private static function url($s, $use_forwarded_host = false) {
+        return self::urlOrigin($s, $use_forwarded_host) . $s['REQUEST_URI'];
     }
 
 }

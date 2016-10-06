@@ -12,19 +12,20 @@ class DefaultView extends View {
         
     }
 
-    public function content($file, $binds) {
+    public function __call($name, $binds) {
         $this->setHeader('Content-Type', 'utf8');
-        $binds['app'] = Configuration::readAll();
-        $binds['user'] = $this->service('user')->data();
+        $variables = $binds[0];
+        $variables['app'] = Configuration::readAll();
+        $variables['user'] = $this->service('authentication')->user();
         $r = $this->renderer('templates');
-        $r->layout('layouts/layout.html', function() use ($r, $file) {
-            return $r->container('containers/container.html', function() use ($r, $file) {
+        $r->layout('layouts/layout.html', function() use ($r, $name) {
+            return $r->container('containers/container.html', function() use ($r, $name) {
                         return $r->loadTemplate('navigation.html') .
-                                $r->loadTemplate($file . '.html') .
+                                $r->loadTemplate($name . '.html') .
                                 $r->loadTemplate('debug.html');
                     });
         });
-        $html = $r->apply($binds);
+        $html = $r->apply($variables);
         print $html;
     }
 

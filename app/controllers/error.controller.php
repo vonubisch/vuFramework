@@ -15,16 +15,15 @@
  * $this->dao('name')->model('name')    Returns a Data Access Object and set a optional Model(name)
  * $this->view('name')->test([*])       Initiates a View object to call with parameters
  */
-class TestController extends Controller {
+class ErrorController extends Controller {
 
     public function run() {
         
     }
 
     public function index() {
-        $this->view('default')->home(array(
+        $this->view('default')->error(array(
             'navigation' => $this->dao('navigation')->getItems()
         ));
     }
-
 }

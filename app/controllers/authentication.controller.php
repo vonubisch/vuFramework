@@ -22,10 +22,21 @@ class AuthenticationController extends Controller {
     }
 
     public function login() {
-        $this->view('default')->content('login', [
-            'template' => 'login',
-            'navigation' => $this->dao('test.navigation')->getItems()
-        ]);
+        if ($this->request('post')):
+            $this->service('authentication')
+                    ->logout();
+            $this->service('authentication')
+                    ->login($this->post('username'), $this->post('password'));
+        endif;
+        $this->view('default')->login(array(
+            'navigation' => $this->dao('navigation')->getItems()
+        ));
+    }
+
+    public function logout() {
+        $this->service('authentication')
+                ->logout();
+        $this->redirect();
     }
 
 }
