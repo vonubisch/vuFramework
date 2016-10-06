@@ -38,8 +38,6 @@ class Application {
 
     public function start() {
         try {
-            Debug::dump('Application started');
-            Debug::dump(Configuration::readAll());
             Factory::base('framework');
             Databases::init(Configuration::get('databases'));
             Services::init(Configuration::read('services'));

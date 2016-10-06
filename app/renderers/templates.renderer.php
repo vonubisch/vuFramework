@@ -68,6 +68,11 @@ class TemplatesRenderer extends Renderer {
         $this->mFilter["uppercase"] = function ($input) {
             return strtoupper($input);
         };
+        
+        $this->mFilter["dump"] = function ($input) {
+            return print_r($input, true);
+        };
+        
         $this->mFilter["singleLine"] = function ($input) {
             return str_replace("\n", " ", $input);
         };

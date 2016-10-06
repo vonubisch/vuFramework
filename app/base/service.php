@@ -9,4 +9,11 @@
 abstract class Service extends Framework {
 
     abstract public function run();
+
+    public function requires($name) {
+        if (!Services::check($name)):
+            throw new ServiceException(Exceptions::FILENOTFOUND . $name);
+        endif;
+    }
+
 }

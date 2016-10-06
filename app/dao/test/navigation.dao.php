@@ -19,12 +19,20 @@ class NavigationDAO extends DAO {
             array(
                 'id' => 1,
                 'title' => 'Home',
-                'url' => $this->url('home')
+                'url' => $this->url('home'),
+                'submenu' => false
             ),
             array(
                 'id' => 2,
                 'title' => 'Test',
-                'url' => $this->url('test', array('test' => 'yes'))
+                'url' => $this->url('test', array('test' => 'yes')),
+                'submenu' => array(
+                    array(
+                        'id' => 1,
+                        'title' => 'Test 1',
+                        'url' => $this->url('test', array('test' => 'yes'))
+                    ),
+                )
             ),
         );
     }

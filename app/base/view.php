@@ -8,10 +8,51 @@
  */
 abstract class View extends Framework {
 
+    private $headers = array(
+        'Content-Type' => array(
+            'utf8' => 'text/html;charset=utf-8',
+            'json' => 'application/json',
+            'atom' => 'application/atom+xml',
+            'css' => 'text/css',
+            'javascript' => 'text/javascript',
+            'jpg ' => 'image/jpeg',
+            'pdf' => 'application/pdf',
+            'rss' => 'application/rss+xml; charset=ISO-8859-1',
+            'plaintext' => 'text/plain',
+            'xml' => 'text/xml',
+            'png' => 'image/png',
+            'mpeg' => 'video/mpeg',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'doc' => 'application/msword',
+            'xls' => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'download' => 'application/octet-stream'
+        )
+    );
+
     abstract public function run();
 
     public final function renderer($name, $options = array()) {
         return Factory::renderer($name, $options);
+    }
+
+    public final function setHeader($key, $value) {
+        switch ($key):
+            case 'Content-Type':
+                $type = $this->headers('Content-Type', $value);
+                if(!is_null($type)):
+                    $value = $type;
+                endif;
+                break;
+        endswitch;
+        header("{$key}: {$value}");
+    }
+
+    public final function headers($type, $key) {
+        if (!isset($this->headers[$type][$key])):
+            return NULL;
+        endif;
+        return $this->headers[$type][$key];
     }
 
 }

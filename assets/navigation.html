@@ -12,26 +12,30 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 {for item in navigation}
+                {if item.submenu == TRUE}
+                <li class="dropdown">
+                    <a href="{= item.url }" title="{= item.title }" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        {= item.title } <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {for subitem in item.submenu}
+                        <li>
+                            <a href="{= subitem.url }" title="{= subitem.title }">
+                                {= subitem.title }
+                            </a>
+                        </li>
+                        {/for}
+                    </ul>
+                </li>
+                {/if}
+                {if item.submenu == FALSE}
                 <li>
                     <a href="{= item.url }" title="{= item.title }">
                         {= item.title }
                     </a>
                 </li>
+                {/if}
                 {/for}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Test <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
             </ul>
         </div>
     </div>

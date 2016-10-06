@@ -13,16 +13,17 @@ class TestView extends View {
     }
 
     public function test($binds) {
-        Debug::dump($binds);
+        $this->setHeader('Content-Type', 'utf8');
+        $binds['app'] = Configuration::readAll();
         $r = $this->renderer('templates');
-
         $r->layout('layouts/layout.html', function() use ($r) {
             return $r->container('containers/container.html', function() use ($r) {
-                        return $r->loadTemplate('navigation.html');
+                        return $r->loadTemplate('navigation.html') .
+                                $r->loadTemplate('home.html') .
+                                $r->loadTemplate('debug.html');
                     });
         });
         $html = $r->apply($binds);
-        Debug::dump(htmlentities($html));
         print $html;
     }
 

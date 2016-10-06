@@ -19,10 +19,14 @@ class Services {
     }
 
     public static function get($service) {
-        if (!isset(self::$objects[$service])):
+        if (self::check($service)):
             throw new ServiceException(Exceptions::KEYNOTFOUND . $service);
         endif;
         return self::$objects[$service];
+    }
+
+    public static function check($service) {
+        return isset(self::$objects[$service]);
     }
 
 }
