@@ -69,10 +69,14 @@ class TemplatesRenderer extends Renderer {
             return strtoupper($input);
         };
         
+        $this->mFilter["language"] = function ($input) {
+            return Languages::get($input);
+        };
+
         $this->mFilter["dump"] = function ($input) {
             return print_r($input, true);
         };
-        
+
         $this->mFilter["singleLine"] = function ($input) {
             return str_replace("\n", " ", $input);
         };

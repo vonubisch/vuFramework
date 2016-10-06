@@ -14,6 +14,7 @@ require_once 'configuration.php';
 require_once 'router.php';
 require_once 'request.php';
 require_once 'databases.php';
+require_once 'languages.php';
 require_once 'factory.php';
 require_once 'services.php';
 

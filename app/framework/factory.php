@@ -58,6 +58,14 @@ class Factory {
         self::load(__FUNCTION__, $name);
     }
 
+    public static function language($name) {
+        if (self::fileExists(__FUNCTION__, $name)):
+            return parse_ini_file(self::path(__FUNCTION__, $name));
+        else:
+            throw new FactoryException(Exceptions::FILENOTFOUND . $name);
+        endif;
+    }
+
     public static function library($name) {
         if (self::fileExists(__FUNCTION__, $name)):
             require_once self::path(__FUNCTION__, $name);
