@@ -18,6 +18,7 @@ class AuthenticationService extends Service {
     );
 
     public function run() {
+        $this->setBinds('user', $this->user);
         if (!$this->useCookies && !$this->useSessions):
             return;
         endif;
@@ -155,6 +156,7 @@ class AuthenticationService extends Service {
         $this->user['id'] = $user->id;
         $this->user['name'] = $user->username;
         $this->user['authenticated'] = true;
+        $this->setBinds('user', $this->user);
     }
 
 }

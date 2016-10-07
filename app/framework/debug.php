@@ -10,6 +10,8 @@
  */
 class Debug {
 
+    private static $console = array();
+
     public static function dump($array, $detailed = false, $exit = false) {
         if (error_reporting() === 0):
             return NULL;
@@ -43,9 +45,28 @@ class Debug {
         endif;
     }
 
+    public static function console($data) {
+        self::$console[] = $data;
+    }
+
     public static function log($data) {
         $file = 'app/logs/debug.log';
         file_put_contents($file, print_r($data, true));
+    }
+
+    public static function data() {
+        if (error_reporting() === 0):
+            return array();
+        endif;
+        $data = array(
+            'Console' => self::$console,
+            'Configuration' => Configuration::readAll(),
+            'Route' => Router::data(),
+            'Services' => Services::objects(),
+            'Server' => $_SERVER,
+            'Request' => array('get' => $_GET, 'post' => $_POST, 'files' => $_FILES, 'cookie' => $_COOKIE, 'session' => $_SESSION),
+        );
+        return $data;
     }
 
 }

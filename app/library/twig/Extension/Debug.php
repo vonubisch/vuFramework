@@ -50,10 +50,10 @@ function twig_var_dump(Twig_Environment $env, $context)
             }
         }
 
-        var_dump($vars);
+        print_r($vars);
     } else {
         for ($i = 2; $i < $count; ++$i) {
-            var_dump(func_get_arg($i));
+            print_r(func_get_arg($i));
         }
     }
 

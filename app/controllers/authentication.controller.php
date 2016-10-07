@@ -28,9 +28,8 @@ class AuthenticationController extends Controller {
             $this->service('authentication')
                     ->login($this->post('username'), $this->post('password'));
         endif;
-        $this->view('default')->login(array(
-            'navigation' => $this->dao('navigation')->getItems()
-        ));
+        $this->bind('navigation', $this->dao('navigation')->getItems());
+        $this->view('default')->login($this->binds());
     }
 
     public function logout() {

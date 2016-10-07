@@ -54,9 +54,34 @@ class Configuration {
     public static function readAll() {
         return self::$config;
     }
-    
+
     public static function write($key, $value) {
         self::$config[$key] = $value;
+    }
+
+    public static function appdata() {
+        $data = array();
+        $data['name'] = self::read('application.name');
+        $data['author'] = self::read('application.author');
+        $data['version'] = self::read('application.version');
+        $data['base'] = self::read('enviroment.base');
+        $data['folder'] = self::read('enviroment.folder');
+        $data['errors'] = self::read('enviroment.errors');
+        $data['logging'] = self::read('enviroment.logging');
+        $data['shutdown'] = self::read('enviroment.shutdown');
+        $data['route'] = self::read('route.name');
+        $data['pattern'] = self::read('route.pattern');
+        $data['controller'] = self::read('route.controller');
+        $data['method'] = self::read('route.method');
+        $data['parameters'] = self::read('route.parameters');
+        $data['url'] = self::read('request.url');
+        $data['queries'] = self::read('request.queries');
+        $data['request'] = self::read('request.request');
+        $data['get'] = self::read('request.get');
+        $data['post'] = self::read('request.post');
+        $data['ssl'] = self::read('request.ssl');
+        $data['response'] = self::read('request.ssl');
+        return $data;
     }
 
     public static function classname($key, $input = '') {

@@ -22,9 +22,8 @@ class TestController extends Controller {
     }
 
     public function index() {
-        $this->view('default')->home(array(
-            'navigation' => $this->dao('navigation')->getItems()
-        ));
+        $this->bind('navigation', $this->dao('navigation')->getItems());
+        $this->view('default')->home($this->binds());
     }
 
 }

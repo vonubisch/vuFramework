@@ -1,3 +1,4 @@
+<script src="assets/plugins/vu-debug/vu-debug.js"></script>
 <div id="vu-debug-bar">
     <div id="vu-debug-header" class="">
         <div id="vu-debug-title" class="">
@@ -7,22 +8,19 @@
         </div>
         <div id="vu-debug-tabs" class="">
             <ul>
-                <li>
-                    <a href="#vu-debug-tab-console">
-                        Console <span class="vu-debug-count vu-debug-badge">0</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#vu-debug-tab-configuration">
-                        Configuration <span class="vu-debug-count vu-debug-badge">0</span>
-                    </a>
-                </li>
+                {% for title,data in debug %}
+                    <li>
+                        <a href="#vu-debug-tab-{{ title }}">
+                            {{ title }} <span class="vu-debug-count vu-debug-badge">0</span>
+                        </a>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
         <div id="vu-debug-controls" class="">
             <a href="#" id="vu-debug-request" title="Request">
-                <span class="vu-debug-badge">{{ app.request.request }}</span>
-                {{ app.route.pattern }}
+                <span class="vu-debug-badge">{{ app.request }}</span>
+                {{ app.pattern }}
             </a>
             <a href="#" id="vu-debug-memory" title="Memory usage">
                 &#9881; 0
@@ -34,11 +32,10 @@
         <div style="clear: both;"></div>
     </div>
     <div id="vu-debug-content" class="">
-        <div class="vu-debug-tab" id="vu-debug-tab-console">
-            <pre>{{ dump(user) }}</pre>
-        </div>
-        <div class="vu-debug-tab" id="vu-debug-tab-configuration">
-            <pre>{{ dump(app) }}</pre>
-        </div>
+        {% for title,data in debug %}
+            <div class="vu-debug-tab" id="vu-debug-tab-{{ title }}">
+                <pre>{{ dump(data) }}</pre>
+            </div>
+        {% endfor %}
     </div>
 </div>

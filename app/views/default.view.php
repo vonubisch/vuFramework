@@ -15,9 +15,7 @@ class DefaultView extends View {
     public function __call($name, $binds) {
         $this->setHeader('Content-Type', 'utf8');
         $variables = $binds[0];
-        $variables['app'] = Configuration::readAll();
         $variables['user'] = $this->service('authentication')->user();
-        $variables['test'] = 'Testing123';
         $twig = $this->renderer('twig');
         echo $twig->render($name . '.twig', $variables);
     }

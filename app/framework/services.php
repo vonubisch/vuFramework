@@ -11,10 +11,16 @@
 class Services {
 
     private static $objects = array();
+    private static $binds = array();
 
     public static function init($services) {
         foreach ($services as $service):
-            self::$objects[$service] = Factory::service($service);
+            $object = Factory::service($service);
+            if (method_exists($object, 'getBinds')):
+                Debug::dump($object->getBinds());
+                self::$binds = array_merge(self::$binds, $object->getBinds());
+            endif;
+            self::$objects[$service] = $object;
         endforeach;
     }
 
@@ -27,6 +33,14 @@ class Services {
 
     public static function check($service) {
         return isset(self::$objects[$service]);
+    }
+
+    public static function objects() {
+        return self::$objects;
+    }
+
+    public static function binds() {
+        return self::$binds;
     }
 
 }

@@ -34,11 +34,11 @@
             <meta name="twitter:title" content="">
             <meta name="twitter:description" content="">
             <meta name="twitter:image" content="">
-            <title>{{ app.application.name }}</title>
-            <base href="{{ app.enviroment.base }}">
+            <title>{{ app.name }}</title>
+            <base href="{{ app.base }}">
             <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
             <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-            {% if app.enviroment.errors %}
+            {% if app.errors %}
                 <link rel="stylesheet" type="text/css" href="assets/plugins/vu-debug/vu-debug.css">
             {% endif %}
             <link rel="icon" href="assets/img/favicon/favicon.ico">
@@ -52,14 +52,13 @@
     </head>
     <body>
         {% include 'navigation.twig' %}
-        {{ test }}
-        <div id="content">{% block content %}{% endblock %}</div>
+        <section id="content" class="container">{% block content %}{% endblock %}</section>
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        {% if app.enviroment.errors %}
+        {% if app.errors %}
             {% include 'debug.twig' %}
-            <script src="assets/plugins/vu-debug/vu-debug.js"></script>
+
         {% endif %}
     </body>
 </html>

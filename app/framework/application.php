@@ -35,7 +35,7 @@ class Application {
             Configuration::write('request', Request::data());
         } catch (Exceptions $error) {
             $error->show(
-                    Configuration::read('enviroment.errors'), Configuration::read('enviroment.errorlog'), Configuration::readAll()
+                    Configuration::read('enviroment.errors'), Configuration::read('paths.errorlog'), Configuration::readAll()
             );
         }
     }
@@ -48,7 +48,7 @@ class Application {
             Factory::controller(Configuration::read('route.controller'), Configuration::read('route.method'));
         } catch (Exceptions $error) {
             $error->show(
-                    Configuration::read('enviroment.errors'), Configuration::read('enviroment.errorlog'), Configuration::readAll()
+                    Configuration::read('enviroment.errors'), Configuration::read('paths.errorlog'), Configuration::readAll()
             );
         }
     }

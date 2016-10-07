@@ -13,11 +13,10 @@ class ACLController extends Controller {
 
     public function index() {
         $acl = $this->dao('acl');
-        $this->view('default')->acl(array(
-            'groups' => $acl->groups(),
-            'routes' => $acl->routes(),
-            'navigation' => $this->dao('navigation')->getItems()
-        ));
+        $this->bind('groups', $acl->groups());
+        $this->bind('routes', $acl->routes());
+        $this->bind('navigation', $this->dao('navigation')->getItems());
+        $this->view('default')->acl($this->binds());
     }
 
     public function change() {
@@ -34,7 +33,7 @@ class ACLController extends Controller {
                 );
                 break;
         endswitch;
-        $this->redirect('acl');
+        $this->index();
     }
 
     public function sync() {
@@ -51,7 +50,7 @@ class ACLController extends Controller {
             );
             $this->dao('acl')->sync($data, $update);
         endforeach;
-        $this->redirect('acl');
+        $this->index();
     }
 
     public function member() {
@@ -67,7 +66,7 @@ class ACLController extends Controller {
                 $this->dao('acl')->removeMember($data);
                 break;
         }
-        $this->redirect('acl');
+        $this->index();
     }
 
     public function route() {
@@ -78,7 +77,7 @@ class ACLController extends Controller {
                 );
                 break;
         }
-        $this->redirect('acl');
+        $this->index();
     }
 
 }
