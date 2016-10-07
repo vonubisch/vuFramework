@@ -81,6 +81,7 @@ class Configuration {
         $data['post'] = self::read('request.post');
         $data['ssl'] = self::read('request.ssl');
         $data['response'] = self::read('request.ssl');
+        $data['memory'] = number_format(memory_get_peak_usage() / 1048576, 2);
         return $data;
     }
 

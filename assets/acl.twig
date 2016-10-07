@@ -15,7 +15,7 @@
 
                     <div class="panel-body">
 
-                        <form action="<?php echo $app->router->generate('acl_sync'); ?>" method="POST" class="pull-left">
+                        <form action="{{ url('acl_sync') }}" method="POST" class="pull-left">
                             <button type="submit" class="btn btn-sm btn-success">
                                 <i class="fa fa-refresh fa-spin"></i>
                                 Synchronize routes with configuration INI file
@@ -53,8 +53,8 @@
                                                     {{ route.controller }}::{{ route.action }}
                                                 </small>
                                             </small>
-                                            <form action="<?php echo $app->router->generate('acl_route', array('type' => 'remove', 'routeid' => $route->id)); ?>" method="POST" class="pull-left">
-                                                <button type="submit" class="btn-link btn-xs" data-toggle="tooltip" data-placement="top" title="Click to delete route '<?php echo $route->name; ?>'">
+                                            <form action="{{ url('acl_route', {'type': 'remove', 'routeid': route.id}) }}" method="POST" class="pull-left">
+                                                <button type="submit" class="btn-link btn-xs" data-toggle="tooltip" data-placement="top" title="Click to delete route '{{ route.name }}'">
                                                     <i class="text-muted fa fa-trash"></i>
                                                 </button>
                                             </form>
@@ -62,14 +62,14 @@
                                         {% for group in groups %}
                                             <td class="text-center">
                                                 <?php if ($acl->access($route->id, $group->id)): ?>
-                                                <form action="<?php echo $app->router->generate('acl_change', array('type' => 'deny', 'routeid' => $route->id, 'groupid' => $group->id)); ?>" method="POST">
-                                                    <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Click to deny access to group '<?php echo $group->name; ?>'">
+                                                <form action="{{ url('acl_change',{'type': 'deny', 'routeid': route.id, 'groupid': group.id }) }}" method="POST">
+                                                    <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Click to deny access to group '{{ route.name }}'">
                                                         <i class="text-success fa fa-check-circle"></i>
                                                     </button>
                                                 </form>
                                                 <?php else: ?>
-                                                <form action="<?php echo $app->router->generate('acl_change', array('type' => 'allow', 'routeid' => $route->id, 'groupid' => $group->id)); ?>" method="POST">
-                                                    <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Click to allow access to group '<?php echo $group->name; ?>'">
+                                                <form action="{{ url('acl_change',{'type': 'allow', 'routeid': route.id, 'groupid': group.id }) }}" method="POST">
+                                                    <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Click to allow access to group '{{ route.name }}'">
                                                         <i class="text-danger fa fa-minus-circle"></i>
                                                     </button>
                                                 </form>
@@ -165,4 +165,4 @@
             </div>
         </div>
     </div>
-    {% endblock %}
+{% endblock %}
