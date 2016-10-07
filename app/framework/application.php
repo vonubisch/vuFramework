@@ -42,6 +42,7 @@ class Application {
 
     public function start() {
         try {
+            
             Factory::base('framework');
             Databases::init(Configuration::get('databases'));
             Services::init(Configuration::read('services'));

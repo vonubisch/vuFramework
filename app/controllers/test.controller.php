@@ -22,8 +22,11 @@ class TestController extends Controller {
     }
 
     public function index() {
+        Debug::console(NULL);
+        Debug::console(true);
+        Debug::console($this->dao('navigation')->getItems());
         $this->bind('navigation', $this->dao('navigation')->getItems());
-        $this->view('default')->home($this->binds());
+        $this->view('default')->home($this->getBinds());
     }
 
 }

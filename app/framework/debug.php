@@ -46,26 +46,71 @@ class Debug {
     }
 
     public static function console($data) {
-        self::$console[] = $data;
+        $bt = debug_backtrace();
+        $text = $data;
+        switch (gettype($data)):
+            case 'boolean':
+                $text = ($data) ? 'true' : 'false';
+                break;
+            case 'NULL':
+                $text = 'NULL';
+                break;
+        endswitch;
+        self::$console[] = array(
+            'type' => self::type($data),
+            'file' => basename($bt[0]['file']),
+            'line' => $bt[0]['line'],
+            'data' => $text
+        );
+    }
+
+    public static function type($variable) {
+        $type = gettype($variable);
+        switch ($type):
+            case 'string':
+                $method = 'strlen';
+                break;
+            case 'object':
+                $method = 'get_class';
+                break;
+            default:
+                $method = 'count';
+        endswitch;
+        return $type . '(' . $method($variable) . ')';
     }
 
     public static function log($data) {
-        $file = 'app/logs/debug.log';
-        file_put_contents($file, print_r($data, true));
+        file_put_contents(Configuration::path('logs', 'debug'), print_r($data, true));
     }
 
-    public static function data() {
+    public static function getLog($file) {
+        $lines = array(0 => 'd');
+        $handle = fopen(Configuration::path('logs', $file), "r");
+        if ($handle) {
+            while (($line = fgets($handle)) !== false) {
+                $lines[] = $line;
+            }
+            fclose($handle);
+        } else {
+            throw new Exception("Exceptions log file not found for debugging");
+        }
+        unset($lines[0]);
+        return implode("\n", array_reverse($lines, true));
+    }
+
+    public static function data($binds) {
         if (error_reporting() === 0):
             return array();
         endif;
-        $data = array(
-            'Console' => self::$console,
-            'Configuration' => Configuration::readAll(),
-            'Route' => Router::data(),
-            'Services' => Services::objects(),
-            'Server' => $_SERVER,
-            'Request' => array('get' => $_GET, 'post' => $_POST, 'files' => $_FILES, 'cookie' => $_COOKIE, 'session' => $_SESSION),
-        );
+        $data = array();
+        $data['Console'] = self::$console;
+        $data['Binds'] = $binds;
+        $data['Configuration'] = Configuration::readAll();
+        $data['Routes'] = Router::routes();
+        $data['Services'] = Services::objects();
+        $data['Request'] = array('get' => $_GET, 'post' => $_POST, 'files' => $_FILES, 'cookie' => $_COOKIE, 'session' => $_SESSION);
+        $data['Exceptions'] = self::getLog('errors');
+        $data['Server'] = $_SERVER;
         return $data;
     }
 

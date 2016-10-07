@@ -16,7 +16,7 @@ class ACLController extends Controller {
         $this->bind('groups', $acl->groups());
         $this->bind('routes', $acl->routes());
         $this->bind('navigation', $this->dao('navigation')->getItems());
-        $this->view('default')->acl($this->binds());
+        $this->view('default')->acl($this->getBinds());
     }
 
     public function change() {

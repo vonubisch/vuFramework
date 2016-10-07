@@ -51,9 +51,6 @@ class Router {
         } else {
             $route = $routes[$errorroute];
         }
-        $query = array();
-        parse_str(filter_input(INPUT_SERVER, 'QUERY_STRING'), $query);
-        $route['queries'] = $query;
         self::$route = $route;
         self::$router = $router;
     }

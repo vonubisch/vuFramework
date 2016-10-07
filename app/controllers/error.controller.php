@@ -23,7 +23,7 @@ class ErrorController extends Controller {
 
     public function index() {
         $this->bind('navigation', $this->dao('navigation')->getItems());
-        $this->view('default')->error($this->binds());
+        $this->view('default')->error($this->getBinds());
     }
 
 }

@@ -14,17 +14,18 @@ abstract class Controller extends Framework {
 
     public function __construct() {
         
-        
     }
 
     public final function bind($key, $value) {
         $this->binds[$key] = $value;
     }
 
-    public final function binds() {
-        $this->bind('app', Configuration::appdata());
-        $this->bind('debug', Debug::data());
-        $this->bind('service', Services::binds());
+    public final function getBinds() {
+        $this->bind('app', Configuration::binds());
+        foreach (Services::binds() as $key => $value):
+            $this->bind($key, $value);
+        endforeach;
+        $this->bind('debug', Debug::data($this->binds));
         return $this->binds;
     }
 

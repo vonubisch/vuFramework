@@ -7,7 +7,6 @@
  */
 class ACLService extends Service {
 
-    public $app;
     private $access = false;
     private $userid = 0;
     private $route, $errorRoute = '';

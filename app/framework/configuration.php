@@ -59,7 +59,7 @@ class Configuration {
         self::$config[$key] = $value;
     }
 
-    public static function appdata() {
+    public static function binds() {
         $data = array();
         $data['name'] = self::read('application.name');
         $data['author'] = self::read('application.author');
