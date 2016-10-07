@@ -17,7 +17,7 @@ class ACLService extends Service {
         $this->errorRoute = $this->getErrorRoute();
         $this->userid = $this->getUserID();
         if ($this->denied($this->route, $this->userid)):
-            die('DENIED');
+            //die('DENIED');
         endif;
         $this->access = true;
     }

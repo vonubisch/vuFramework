@@ -19,28 +19,31 @@ class TwigRenderer extends Renderer {
     }
 
     public function render($template, $binds = array()) {
-        return $this->twig->render($template, $binds);
+        try {
+            return $this->twig->render($template, $binds);
+        } catch (Twig_Error $e) {
+            throw new RendererException($e->getMessage());
+        }
     }
 
     private function getTwig() {
         $this->library('twig/Autoloader.php');
         Twig_Autoloader::register();
-        $this->loader = new Twig_Loader_Filesystem(str_replace(Configuration::read('magic.replace'), '', Configuration::read('paths.public')));
-        return new Twig_Environment($this->loader, array(
-            'cache' => str_replace(Configuration::read('magic.replace'), 'twig' . DIRECTORY_SEPARATOR, Configuration::read('paths.cache')),
+        $this->loader = new Twig_Loader_Filesystem($this->path('public', ''));
+        $twig = new Twig_Environment($this->loader, array(
+            'debug' => $this->debugging()
+                //'cache' => str_replace($this->path('cache', 'twig' . DIRECTORY_SEPERATOR)),
         ));
+        $twig->addExtension(new Twig_Extension_Debug());
+        return $twig;
     }
 
-    private function getFile($file) {
-        $path = $this->path($file);
-        if (!file_exists($path)):
-            throw new RendererException(Exceptions::FILENOTFOUND . $file);
-        endif;
-        return file_get_contents($path);
+    private function debugging() {
+        return Configuration::read('enviroment.errors');
     }
 
-    private function path($file) {
-        return Configuration::path('public', $file);
+    private function path($type, $file) {
+        return Configuration::path($type, $file);
     }
 
 }

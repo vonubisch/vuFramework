@@ -1,0 +1,269 @@
+#vu-debug {
+    position: fixed;
+    bottom: -21px;
+    width: 100%;    
+}
+
+#vu-debug .panel-default > .panel-heading{
+    background: #00B4FF;
+}
+
+#vu-debug .panel-heading {
+    padding: 0;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+#vu-debug .panel-group .panel {
+    border-radius: 0;
+}
+
+#vu-debug .panel-title a {
+    color: #FFFFFF;
+    text-align: center;
+    width: 100%;
+    display: block;
+    padding: 10px 15px;
+    font-size: 24px;
+    font-family: Helvetica,Arial,sans-serif;
+    outline: none;
+}
+
+#vu-debug .panel-title a:hover, .panel-title a:focus, .panel-title a:active {
+    text-decoration: none;
+    outline: none;
+}
+
+#vu-debug .panel-body {
+    overflow: scroll;
+    height: 200px;
+}
+
+#vu-debug-bar pre {
+    /* defaults */
+    display: block;
+    font-size: 12px;
+    white-space: pre;
+    margin: 0px;
+    /* bootstrap overrides */
+    padding: 0px;
+    line-height: initial;
+    background-color: initial;
+    border: initial;
+    overflow: initial;
+    word-break: initial;
+    word-wrap: initial;
+    border-radius: initial;
+}
+
+#vu-debug-bar {
+    height: 500px;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+    margin-bottom: -470px;
+    resize: vertical;
+    z-index: 100000;
+    opacity: .8;
+    font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace;
+}
+
+#vu-debug-bar.open {
+    margin-bottom: 0;
+    opacity: 1;
+}
+#vu-debug-bar:hover {
+    opacity: 1;
+}
+
+
+#vu-debug-header {
+    background: #efefef;
+    height: 30px;
+    border: 1px solid #cccccc;
+    border-left: 0;
+    border-right: 0;
+    cursor: pointer;
+}
+#vu-debug-header:hover {
+    background: #f7f7f7;
+}
+
+#vu-debug-title {
+    width: 10%;
+    float: left;
+    line-height: 2em;
+    padding-left: 10px;
+    height: 30px;
+    font-weight: bold;
+}
+#vu-debug-tabs {
+    width: 70%;
+    float: left;
+}
+#vu-debug-tabs ul {
+    height: 30px;
+    line-height: 2em;
+    margin: 0;
+    padding: 0;
+}
+
+#vu-debug-tabs ul li {
+    display: inline;
+}
+
+#vu-debug-tabs ul li a {
+    height: 30px;
+    padding: 8px 10px 8px;
+    border: 1px solid transparent;
+    border-top: 0;
+    border-bottom: 0;
+    color: #888;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+#vu-debug-tabs ul li a:hover,
+#vu-debug-tabs ul li a.open {
+    background: #fff;
+    color: #555;
+}
+#vu-debug-tabs ul li a:hover {
+    padding-bottom: 7px;
+}
+
+#vu-debug-tabs ul li a:hover, #vu-debug-tabs ul li a:focus {
+    text-decoration: none;
+}
+
+#vu-debug-tabs ul li a.open:hover {
+    padding-bottom: 8px;
+}
+
+#vu-debug-tabs ul li a.open {
+    border: 1px solid #cccccc;
+    border-top: 0;
+    border-bottom: 0;
+}
+
+#vu-debug-tabs .vu-debug-badge {
+    background: #e3e3e3;
+}
+
+#vu-debug-tabs:after {
+
+}
+
+#vu-debug-content {
+    margin: 1px;
+    background: white;
+}
+.vu-debug-tab {
+    overflow: auto;
+}
+
+#vu-debug-content .vu-debug-tab {
+    display: none;
+    height: 469px;
+}
+#vu-debug-content .vu-debug-tab.open {
+    display: block;
+}
+
+#vu-debug-controls {
+    width: 20%;
+    float: left;
+    text-align: right;
+}
+
+#vu-debug-controls a {
+    color: #999;
+    color: #999;
+    font-size: 1em;
+    line-height: 2em;
+    padding: 6px 7px;
+    border-right: 1px solid #ccc;
+}
+
+#vu-debug-controls a:hover {
+    text-decoration: none;
+    color: #555;
+}
+
+#vu-debug-close {
+    color: #ccc;
+    display: none;
+    font-size: 1.2em;
+    line-height: 1.7em;
+    font-weight: bold;
+    padding: 2px 7px;
+    border: 0px;
+}
+
+#vu-debug-request {
+
+}
+
+#vu-debug-content table {
+    width: 100%;
+    font-size: 12px;
+}
+#vu-debug-content table tr {
+    border-bottom: 1px solid #eee;
+}
+
+#vu-debug-content table tr td {
+    padding: 3px;
+    vertical-align: top;
+}
+
+#vu-debug-content table tr td small {
+    color: #999;
+}
+
+#vu-debug-tab-console table tr,
+#vu-debug-tab-services table tr,
+#vu-debug-tab-database table tr
+{
+    height: 30px;
+    overflow: hidden;
+    cursor: pointer;
+}
+#vu-debug-content table tr:hover {
+    background: #f7f7f7;
+}
+
+#vu-debug-tab-console table tr td:first-child {
+    vertical-align: middle;
+}
+
+
+p.vu-debug-toggle-pre,
+p.vu-debug-toggle-pre pre
+{
+    padding:0;margin:0;line-height: 1em;
+}
+
+.vu-debug-code {
+
+}
+
+.vu-debug-badge {
+    background: #e3e3e3;
+    color: #888;
+    padding: 2px 6px 2px 5px;
+    margin: 0 2px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+.text-right {
+    text-align: right;
+}
+.text-center {
+    text-align: center;
+}
+.text-left {
+    text-align: left;
+}

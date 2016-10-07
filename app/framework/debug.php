@@ -29,8 +29,7 @@ class Debug {
         $line = $bt[0]['line'];
         $type = gettype($array);
         $count = $method($array);
-        $output = "<pre style='border: 1px solid #ccc; background: #f5f5f5; color: #333; padding: 10px'><code>"
-                . "<strong>$file($line)</strong> <i>$type($count)</i>\r\n";
+        $output = "$file($line) $type($count)\r\n";
         if ($detailed):
             ob_start();
             var_dump($array);
@@ -38,7 +37,6 @@ class Debug {
         else:
             $output .= print_r($array, true);
         endif;
-        $output .= "</code></pre>";
         echo $output;
         if ($exit):
             exit;

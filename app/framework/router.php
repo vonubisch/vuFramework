@@ -220,6 +220,7 @@ class Router {
                 }
                 self::$route = array(
                     'name' => $name,
+                    'pattern' => $route,
                     'request' => explode('|', $methods),
                     'controller' => $target[0],
                     'method' => $target[1],

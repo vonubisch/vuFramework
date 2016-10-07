@@ -1,0 +1,44 @@
+<div id="vu-debug-bar">
+    <div id="vu-debug-header" class="">
+        <div id="vu-debug-title" class="">
+            &#9776;
+            &nbsp;
+            vuDebug
+        </div>
+        <div id="vu-debug-tabs" class="">
+            <ul>
+                <li>
+                    <a href="#vu-debug-tab-console">
+                        Console <span class="vu-debug-count vu-debug-badge">0</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#vu-debug-tab-configuration">
+                        Configuration <span class="vu-debug-count vu-debug-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="vu-debug-controls" class="">
+            <a href="#" id="vu-debug-request" title="Request">
+                <span class="vu-debug-badge">{{ app.request.request }}</span>
+                {{ app.route.pattern }}
+            </a>
+            <a href="#" id="vu-debug-memory" title="Memory usage">
+                &#9881; 0
+            </a>
+            <a href="#" id="vu-debug-close" title="Close vuDebug">
+                &#10006;
+            </a>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <div id="vu-debug-content" class="">
+        <div class="vu-debug-tab" id="vu-debug-tab-console">
+            <pre>{{ dump(user) }}</pre>
+        </div>
+        <div class="vu-debug-tab" id="vu-debug-tab-configuration">
+            <pre>{{ dump(app) }}</pre>
+        </div>
+    </div>
+</div>

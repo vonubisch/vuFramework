@@ -38,6 +38,9 @@
             <base href="{{ app.enviroment.base }}">
             <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
             <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+            {% if app.enviroment.errors %}
+                <link rel="stylesheet" type="text/css" href="assets/plugins/vu-debug/vu-debug.css">
+            {% endif %}
             <link rel="icon" href="assets/img/favicon/favicon.ico">
             <link rel="apple-touch-icon" href="assets/img/favicon/favicon.png">
             <link rel="author" type="text/plain" href="humans.txt">
@@ -47,9 +50,16 @@
             <![endif]-->
         {% endblock %}
     </head>
-    {{ test }}
     <body>
+        {% include 'navigation.twig' %}
+        {{ test }}
+        <div id="content">{% block content %}{% endblock %}</div>
+
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        {% if app.enviroment.errors %}
+            {% include 'debug.twig' %}
+            <script src="assets/plugins/vu-debug/vu-debug.js"></script>
+        {% endif %}
     </body>
 </html>
