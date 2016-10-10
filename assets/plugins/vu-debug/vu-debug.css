@@ -114,7 +114,7 @@
 
 #vu-debug-tabs ul li a {
     height: 30px;
-    padding: 7px 10px 9px;
+    padding: 8px 10px 8px;
     border: 1px solid transparent;
     border-top: 0;
     border-bottom: 0;
@@ -267,3 +267,9 @@ p.vu-debug-toggle-pre pre
 .text-left {
     text-align: left;
 }
+
+#vu-debug-content .string { color: green; }
+#vu-debug-content .number { color: darkorange; }
+#vu-debug-content .boolean { color: blue; }
+#vu-debug-content .null { color: magenta; }
+#vu-debug-content .key { color: red; }

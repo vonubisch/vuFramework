@@ -12,7 +12,7 @@ class ACLDao extends DAO {
     }
 
     public function isAllowed($route, $userid) {
-        $results = $this->dbh->query(""
+        $this->dbh->query(""
                         . "SELECT `acl_permissions`.`groupid` FROM `acl_routes` "
                         . "JOIN `acl_permissions` ON `acl_routes`.`id` = `acl_permissions`.`routeid` "
                         . "JOIN `acl_members` ON `acl_permissions`.`groupid` = `acl_members`.`groupid` "
@@ -24,16 +24,22 @@ class ACLDao extends DAO {
         return (bool) $this->dbh->affected();
     }
 
+    public function matrix() {
+        $routes = $this->routes();
+        foreach ($routes as $route):
+            $route->groups = $this->getGroupsAndPermissions($route->id);
+        endforeach;
+        return $routes;
+    }
+
     public function groups() {
         $query = "SELECT `id`, `name` FROM `acl_groups` ";
-        $results = $this->dbh->query($query)->fetchAll('obj');
-        return $results;
+        return $this->dbh->query($query)->fetchAll('obj');
     }
 
     public function routes() {
-        $query = "SELECT `id`, `name`, `method`, `url`, `controller`, `action` FROM `acl_routes` ORDER BY `name`";
-        $results = $this->dbh->query($query)->fetchAll('obj');
-        return $results;
+        $query = "SELECT `id`, `name`, `request`, `url`, `controller`, `method` FROM `acl_routes` ORDER BY `name`";
+        return $this->dbh->query($query)->fetchAll('obj');
     }
 
     public function access($routeid, $groupid) {
@@ -67,15 +73,36 @@ class ACLDao extends DAO {
         $this->dbh->table('acl_routes')->insert($data, $update)->execute();
     }
 
-    public function getMembers($groupid) {
-        $results = $this->dbh->query(""
-                        . "SELECT `users_accounts`.`id`, `users_accounts`.`username` FROM `acl_members` "
-                        . "JOIN `users_accounts` ON `users_accounts`.`id` = `acl_members`.`userid`"
-                        . "WHERE `acl_members`.`groupid` = :groupid"
-                )
-                ->bind(':groupid', $groupid)
-                ->fetchAll('obj');
-        return $results;
+    public function members() {
+        $groups = $this->groups();
+        foreach ($groups as $group):
+            $group->members = $this->getMembersByGroup($group->id);
+        endforeach;
+        return $groups;
+    }
+
+    private function getGroupsAndPermissions($routeid) {
+        $groups = $this->groups();
+        foreach ($groups as $group):
+            $group->access = $this->access($routeid, $group->id);
+        endforeach;
+        return $groups;
+    }
+
+    private function getMembersByGroup($groupid) {
+        return $this->dbh->query(""
+                                . "SELECT `users_accounts`.`id`, `users_accounts`.`username` FROM `acl_members` "
+                                . "JOIN `users_accounts` ON `users_accounts`.`id` = `acl_members`.`userid`"
+                                . "WHERE `acl_members`.`groupid` = :groupid"
+                        )
+                        ->bind(':groupid', $groupid)
+                        ->fetchAll('obj');
+    }
+
+    public function users() {
+        return $this->dbh
+                        ->query("SELECT `id`, `username` FROM `users_accounts` ")
+                        ->fetchAll('obj');
     }
 
     public function removeRoute($routeid) {

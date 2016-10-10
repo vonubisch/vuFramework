@@ -26,4 +26,9 @@ class ErrorController extends Controller {
         $this->view('default')->error($this->getBinds());
     }
 
+    public function forbidden() {
+        $this->bind('error', array('code' => 403, 'title' => 'Forbidden'));
+        $this->view('default')->error($this->getBinds());
+    }
+
 }

@@ -8,18 +8,20 @@
     </style>
 {% endblock %}
 {% block content %}
-    <h1>Index</h1>
+    <div class="container">
+        <h1>Index</h1>
 
-    {% if user.authenticated %}
-        <div class="alert alert-success" role="alert">
-            <strong>Welcome {{ user.name }}</strong>, you are logged in! 
-        </div>
-    {% endif %}
+        {% if user.authenticated %}
+            <div class="alert alert-success" role="alert">
+                <strong>Welcome {{ user.name }}</strong>, you are logged in! 
+            </div>
+        {% endif %}
 
 
-    <p class="important">
-        Welcome to my awesome homepage.
-    </p>
+        <p class="important">
+            Welcome to my awesome homepage.
+        </p>
+    </div>
 
 
 {% endblock %}

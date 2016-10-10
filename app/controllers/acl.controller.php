@@ -8,27 +8,27 @@
 class ACLController extends Controller {
 
     public function run() {
-        
+        $this->dao = $this->dao('acl');
     }
 
     public function index() {
-        $acl = $this->dao('acl');
-        $this->bind('groups', $acl->groups());
-        $this->bind('routes', $acl->routes());
+        $this->bind('groups', $this->dao->groups());
+        $this->bind('routes', $this->dao->matrix());
+        $this->bind('members', $this->dao->members());
+        $this->bind('users', $this->dao->users());
         $this->bind('navigation', $this->dao('navigation')->getItems());
         $this->view('default')->acl($this->getBinds());
     }
 
     public function change() {
-        $acl = $this->dao('acl');
         switch ($this->parameter('type')):
             case 'allow':
-                $acl->allowGroup(
+                $this->dao->allowGroup(
                         $this->parameter('routeid'), $this->parameter('groupid')
                 );
                 break;
             case 'deny':
-                $acl->denyGroup(
+                $this->dao->denyGroup(
                         $this->parameter('routeid'), $this->parameter('groupid')
                 );
                 break;
@@ -37,18 +37,18 @@ class ACLController extends Controller {
     }
 
     public function sync() {
-        $update = array('method', 'url', 'controller', 'action');
+        $update = array('request', 'url', 'controller', 'method');
         foreach (Router::routes() as $key => $route):
-            list($method, $url, $go, $name) = $route;
-            list($controller, $action) = $go;
+            list($request, $url, $go, $name) = $route;
+            list($controller, $method) = $go;
             $data = array(
                 'name' => $name,
-                'method' => $method,
+                'request' => $request,
                 'url' => $url,
                 'controller' => $controller,
-                'action' => $action
+                'method' => $method
             );
-            $this->dao('acl')->sync($data, $update);
+            $this->dao->sync($data, $update);
         endforeach;
         $this->index();
     }
@@ -60,10 +60,10 @@ class ACLController extends Controller {
         );
         switch ($this->parameter('type')) {
             case 'add':
-                $this->dao('acl')->addMember($data);
+                $this->dao->addMember($data);
                 break;
             case 'remove':
-                $this->dao('acl')->removeMember($data);
+                $this->dao->removeMember($data);
                 break;
         }
         $this->index();
@@ -72,7 +72,7 @@ class ACLController extends Controller {
     public function route() {
         switch ($this->parameter('type')) {
             case 'remove':
-                $this->dao('acl')->removeRoute(
+                $this->dao->removeRoute(
                         $this->parameter('routeid')
                 );
                 break;

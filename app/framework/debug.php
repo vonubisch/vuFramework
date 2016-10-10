@@ -103,14 +103,14 @@ class Debug {
             return array();
         endif;
         $data = array();
-        $data['Console'] = self::$console;
-        $data['Binds'] = $binds;
-        $data['Configuration'] = Configuration::readAll();
-        $data['Routes'] = Router::routes();
-        $data['Services'] = Services::objects();
-        $data['Request'] = array('get' => $_GET, 'post' => $_POST, 'files' => $_FILES, 'cookie' => $_COOKIE, 'session' => $_SESSION);
-        $data['Exceptions'] = self::getLog('errors');
-        $data['Server'] = $_SERVER;
+        $data['Console'] = print_r(self::$console, true);
+        $data['Binds'] = json_encode($binds);
+        $data['Configuration'] = json_encode(Configuration::readAll());
+        $data['Routes'] = json_encode(Router::routes());
+        $data['Services'] = print_r(Services::objects(), true);
+        $data['Request'] = json_encode(array('get' => $_GET, 'post' => $_POST, 'files' => $_FILES, 'cookies' => $_COOKIE, 'sessions' => $_SESSION));
+        $data['Exceptions'] = print_r(self::getLog('errors'), true);
+        $data['Server'] = json_encode($_SERVER);
         return $data;
     }
 

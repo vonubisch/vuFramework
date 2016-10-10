@@ -52,8 +52,7 @@ class TwigRenderer extends Renderer {
             else:
                 $args = $args[1];
             endif;
-            $url = Router::generate($name, $args);
-            return $url;
+            return Router::generate($name, $args);
         });
     }
 

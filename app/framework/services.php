@@ -17,7 +17,6 @@ class Services {
         foreach ($services as $service):
             $object = Factory::service($service);
             if (method_exists($object, 'getBinds')):
-                Debug::dump($object->getBinds());
                 self::$binds = array_merge(self::$binds, $object->getBinds());
             endif;
             self::$objects[$service] = $object;

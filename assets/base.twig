@@ -17,10 +17,10 @@
             <meta name="description" content="">
             <meta name="keywords" content="">
             <meta name="author" content="{{ app.application.author }}">
-            <meta name="application-name" content="vuApplication">
+            <meta name="application-name" content="{{ app.name }}">
             <meta name="msapplication-TileColor" content="#000000">
             <meta name="theme-color" content="#999999">
-            <meta property="og:site_name" content="">
+            <meta property="og:site_name" content="{{ app.name }}">
             <meta property="og:url" content="">
             <meta property="og:title" content="">
             <meta property="og:type" content="">
@@ -31,16 +31,14 @@
             <meta property="fb:app_id" content="">
             <meta name="twitter:card" content="">
             <meta name="twitter:site" content="">
-            <meta name="twitter:title" content="">
+            <meta name="twitter:title" content="{{ app.name }}">
             <meta name="twitter:description" content="">
             <meta name="twitter:image" content="">
             <title>{{ app.name }}</title>
             <base href="{{ app.base }}">
-            <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
-            <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-            {% if app.errors %}
-                <link rel="stylesheet" type="text/css" href="assets/plugins/vu-debug/vu-debug.css">
-            {% endif %}
+            <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+            <link rel="stylesheet" type="text/css" href="assets/css/app.css">
             <link rel="icon" href="assets/img/favicon/favicon.ico">
             <link rel="apple-touch-icon" href="assets/img/favicon/favicon.png">
             <link rel="author" type="text/plain" href="humans.txt">
@@ -52,12 +50,14 @@
     </head>
     <body>
         {% include 'navigation.twig' %}
-        <section id="content" class="container">{% block content %}{% endblock %}</section>
-
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        {% if app.errors %}
-            {% include 'debug.twig' %}
-        {% endif %}
-    </body>
+    {% block content %}{% endblock %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% block js %}{% endblock %}
+{% if app.errors %}
+    <link rel="stylesheet" type="text/css" href="assets/plugins/vu-debug/vu-debug.css">
+    <script src="assets/plugins/vu-debug/vu-debug.js"></script>
+    {% include 'debug.twig' %}
+{% endif %}
+</body>
 </html>
