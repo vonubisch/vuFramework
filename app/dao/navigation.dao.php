@@ -50,6 +50,11 @@ class NavigationDAO extends DAO {
                         'title' => 'Test 1',
                         'url' => $this->url('test', array('test' => 'yes'))
                     ),
+                    array(
+                        'id' => 2,
+                        'title' => 'Trigger 404',
+                        'url' => 'dddd'
+                    ),
                 )
             ),
         );

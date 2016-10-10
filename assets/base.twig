@@ -34,7 +34,7 @@
             <meta name="twitter:title" content="{{ app.name }}">
             <meta name="twitter:description" content="">
             <meta name="twitter:image" content="">
-            <title>{{ app.name }}</title>
+            <title>{% block title %}{% endblock %} - {{ app.name }}</title>
             <base href="{{ app.base }}">
             <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
             <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -53,6 +53,7 @@
     {% block content %}{% endblock %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://tweakimg.net/x/min/general.js?1475576866"></script>
 {% block js %}{% endblock %}
 {% if app.errors %}
     <link rel="stylesheet" type="text/css" href="assets/plugins/vu-debug/vu-debug.css">

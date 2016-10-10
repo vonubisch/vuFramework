@@ -36,23 +36,4 @@ abstract class View extends Framework {
         return Factory::renderer($name, $options);
     }
 
-    public final function setHeader($key, $value) {
-        switch ($key):
-            case 'Content-Type':
-                $type = $this->headers('Content-Type', $value);
-                if (!is_null($type)):
-                    $value = $type;
-                endif;
-                break;
-        endswitch;
-        header("{$key}: {$value}");
-    }
-
-    public final function headers($type, $key) {
-        if (!isset($this->headers[$type][$key])):
-            return NULL;
-        endif;
-        return $this->headers[$type][$key];
-    }
-
 }

@@ -16,7 +16,7 @@ class ACLService extends Service {
         $this->errorRoute = $this->getErrorRoute();
         $this->userid = $this->getUserID();
         if ($this->denied($this->route, $this->userid)):
-            $this->controller('error', 'forbidden');
+            $this->redirect($this->errorRoute, array('code' => 403));
         endif;
         $this->access = true;
     }

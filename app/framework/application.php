@@ -45,7 +45,9 @@ class Application {
             
             Factory::base('framework');
             Databases::init(Configuration::get('databases'));
+
             Services::init(Configuration::read('services'));
+
             Factory::controller(Configuration::read('route.controller'), Configuration::read('route.method'));
         } catch (Exceptions $error) {
             $error->show(

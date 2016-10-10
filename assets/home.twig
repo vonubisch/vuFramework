@@ -1,27 +1,16 @@
 {% extends "base.twig" %}
 
-{% block title %}Index{% endblock %}
-{% block head %}
-    {{ parent() }}
-    <style type="text/css">
-        .important { color: #336699; }
-    </style>
-{% endblock %}
+{% block title %}Home{% endblock %}
 {% block content %}
     <div class="container">
         <h1>Index</h1>
-
         {% if user.authenticated %}
             <div class="alert alert-success" role="alert">
                 <strong>Welcome {{ user.name }}</strong>, you are logged in! 
             </div>
         {% endif %}
-
-
         <p class="important">
             Welcome to my awesome homepage.
         </p>
     </div>
-
-
 {% endblock %}

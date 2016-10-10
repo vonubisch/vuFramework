@@ -12,7 +12,7 @@ class AuthenticationService extends Service {
     private $useSessions = true;
     private $key = 'vuauth';
     private $user = array(
-        'id' => NULL,
+        'id' => 0,
         'name' => 'Guest',
         'authenticated' => false
     );

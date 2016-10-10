@@ -48,12 +48,18 @@ abstract class Framework {
         return Router::generate($name, $parameters);
     }
 
-    public final function redirect($route = NULL, $url = false) {
-        if (is_null($route) && $url === false):
+    public final function redirect($route = NULL, $parameters = array()) {
+        if (is_null($route)):
             $url = Configuration::read('enviroment.base');
         endif;
-        if (!$url):
-            $url = $this->url($route);
+        $url = $this->url($route, $parameters);
+        header('Location: ' . $url);
+        exit;
+    }
+
+    public final function redirectURL($url = false) {
+        if ($url === false):
+            $url = Configuration::read('enviroment.base');
         endif;
         header('Location: ' . $url);
         exit;
@@ -69,6 +75,25 @@ abstract class Framework {
 
     public final function get($key = NULL, $filter = FILTER_DEFAULT, $flags = NULL) {
         return Request::get($key, $filter, $flags);
+    }
+
+    public final function setHeader($key, $value) {
+        switch ($key):
+            case 'Content-Type':
+                $type = $this->headers('Content-Type', $value);
+                if (!is_null($type)):
+                    $value = $type;
+                endif;
+                break;
+        endswitch;
+        header("{$key}: {$value}");
+    }
+
+    public final function headers($type, $key) {
+        if (!isset($this->headers[$type][$key])):
+            return NULL;
+        endif;
+        return $this->headers[$type][$key];
     }
 
 }

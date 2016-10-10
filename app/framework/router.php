@@ -50,6 +50,8 @@ class Router {
             $route = $router::$route;
         } else {
             $route = $routes[$errorroute];
+            $route['name'] = $errorroute;
+            $route['parameters']['code'] = 404;
         }
         self::$route = $route;
         self::$router = $router;
