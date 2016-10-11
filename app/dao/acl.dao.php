@@ -11,6 +11,19 @@ class ACLDao extends DAO {
         $this->dbh = $this->database('mysql');
     }
 
+    public function action($action, $userid) {
+        $this->dbh->query(""
+                        . "SELECT `acl_permissions`.`groupid` FROM `acl_actions` "
+                        . "JOIN `acl_permissions` ON `acl_actions`.`id` = `acl_permissions`.`actionid` "
+                        . "JOIN `acl_members` ON `acl_permissions`.`groupid` = `acl_members`.`groupid` "
+                        . "WHERE `acl_actions`.`name` = :action AND `acl_members`.`userid` = :userid LIMIT 1"
+                )
+                ->bind(':action', $action)
+                ->bind(':userid', $userid)
+                ->fetch('obj');
+        return (bool) $this->dbh->affected();
+    }
+
     public function isAllowed($route, $userid) {
         $this->dbh->query(""
                         . "SELECT `acl_permissions`.`groupid` FROM `acl_routes` "
@@ -24,12 +37,20 @@ class ACLDao extends DAO {
         return (bool) $this->dbh->affected();
     }
 
-    public function matrix() {
+    public function routesMatrix() {
         $routes = $this->routes();
         foreach ($routes as $route):
-            $route->groups = $this->getGroupsAndPermissions($route->id);
+            $route->groups = $this->getRouteGroupsAndPermissions($route->id);
         endforeach;
         return $routes;
+    }
+
+    public function actionsMatrix() {
+        $actions = $this->actions();
+        foreach ($actions as $action):
+            $action->groups = $this->getActionGroupsAndPermissions($action->id);
+        endforeach;
+        return $actions;
     }
 
     public function groups() {
@@ -42,7 +63,12 @@ class ACLDao extends DAO {
         return $this->dbh->query($query)->fetchAll('obj');
     }
 
-    public function access($routeid, $groupid) {
+    public function actions() {
+        $query = "SELECT `id`, `name`, `description` FROM `acl_actions` ORDER BY `name`";
+        return $this->dbh->query($query)->fetchAll('obj');
+    }
+
+    public function hasAccessToRoute($routeid, $groupid) {
         $results = $this->dbh->query(""
                         . "SELECT `groupid` FROM `acl_permissions` "
                         . "WHERE `routeid` = :routeid AND `groupid` = :groupid LIMIT 1"
@@ -53,7 +79,34 @@ class ACLDao extends DAO {
         return (bool) $this->dbh->affected();
     }
 
-    public function allowGroup($routeid, $groupid) {
+    public function hasAccessToAction($actionid, $groupid) {
+        $results = $this->dbh->query(""
+                        . "SELECT `groupid` FROM `acl_permissions` "
+                        . "WHERE `actionid` = :actionid AND `groupid` = :groupid LIMIT 1"
+                )
+                ->bind(':actionid', $actionid)
+                ->bind(':groupid', $groupid)
+                ->fetch('obj');
+        return (bool) $this->dbh->affected();
+    }
+
+    public function allowActionGroup($actionid, $groupid) {
+        $data = array(
+            'groupid' => $groupid,
+            'actionid' => $actionid
+        );
+        $this->dbh->table('acl_permissions')->insert($data)->execute();
+    }
+
+    public function denyActionGroup($actionid, $groupid) {
+        $this->dbh->table('acl_permissions')
+                ->delete('groupid = :groupid AND actionid = :actionid LIMIT 1')
+                ->bind(':groupid', $groupid)
+                ->bind(':actionid', $actionid)
+                ->execute();
+    }
+
+    public function allowRouteGroup($routeid, $groupid) {
         $data = array(
             'groupid' => $groupid,
             'routeid' => $routeid
@@ -61,7 +114,7 @@ class ACLDao extends DAO {
         $this->dbh->table('acl_permissions')->insert($data)->execute();
     }
 
-    public function denyGroup($routeid, $groupid) {
+    public function denyRouteGroup($routeid, $groupid) {
         $this->dbh->table('acl_permissions')
                 ->delete('groupid = :groupid AND routeid = :routeid LIMIT 1')
                 ->bind(':groupid', $groupid)
@@ -81,10 +134,18 @@ class ACLDao extends DAO {
         return $groups;
     }
 
-    private function getGroupsAndPermissions($routeid) {
+    private function getRouteGroupsAndPermissions($routeid) {
         $groups = $this->groups();
         foreach ($groups as $group):
-            $group->access = $this->access($routeid, $group->id);
+            $group->access = $this->hasAccessToRoute($routeid, $group->id);
+        endforeach;
+        return $groups;
+    }
+
+    private function getActionGroupsAndPermissions($actionid) {
+        $groups = $this->groups();
+        foreach ($groups as $group):
+            $group->access = $this->hasAccessToAction($actionid, $group->id);
         endforeach;
         return $groups;
     }
@@ -113,10 +174,25 @@ class ACLDao extends DAO {
                 ->execute();
     }
 
+    public function removeAction($actionid) {
+        $this->removePermissionsByAction($actionid);
+        $this->dbh->table('acl_actions')
+                ->delete('id = :actionid LIMIT 1')
+                ->bind(':actionid', $actionid)
+                ->execute();
+    }
+
     public function removePermissionsByRoute($routeid) {
         $this->dbh->table('acl_permissions')
                 ->delete('routeid = :routeid')
                 ->bind(':routeid', $routeid)
+                ->execute();
+    }
+
+    public function removePermissionsByAction($actionid) {
+        $this->dbh->table('acl_permissions')
+                ->delete('actionid = :actionid')
+                ->bind(':actionid', $actionid)
                 ->execute();
     }
 

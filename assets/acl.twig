@@ -2,7 +2,7 @@
 {% block title %}ACL{% endblock %}
 {% block content %}
     <div class="container">
-        <form action="{{ url('acl_sync') }}" method="POST" class="pull-left">
+        <form action="{{ url('acl_sync', {'table':'route'}) }}" method="POST" class="pull-left">
             <button type="submit" class="btn btn-sm btn-success">
                 <i class="fa fa-refresh fa-spin"></i>
                 Synchronize routes with configuration INI file
@@ -38,7 +38,7 @@
                                     {{ route.controller }} &#10141; {{ route.method }}
                                 </small>
                             </small>
-                            <form action="{{ url('acl_route', {'type': 'remove', 'routeid': route.id}) }}" method="POST" class="pull-left">
+                            <form action="{{ url('acl_route', {'table':'route', 'type': 'remove', 'routeid': route.id}) }}" method="POST" class="pull-left">
                                 <button type="submit" class="btn-link btn-xs" data-toggle="tooltip" data-placement="top" title="Click to delete route '{{ route.name }}'">
                                     <i class="text-muted fa fa-trash"></i>
                                 </button>
@@ -47,13 +47,13 @@
                         {% for group in route.groups %}
                             <td class="text-center">
                                 {% if group.access %}
-                                    <form action="{{ url('acl_change',{'type': 'deny', 'routeid': route.id, 'groupid': group.id }) }}" method="POST">
+                                    <form action="{{ url('acl_change',{'table':'route', 'type': 'deny', 'id': route.id, 'groupid': group.id }) }}" method="POST">
                                         <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Click to deny access to group '{{ route.name }}'">
                                             <i class="text-success fa fa-check-circle"></i>
                                         </button>
                                     </form>
                                 {% else %}
-                                    <form action="{{ url('acl_change',{'type': 'allow', 'routeid': route.id, 'groupid': group.id }) }}" method="POST">
+                                    <form action="{{ url('acl_change',{'table':'route', 'type': 'allow', 'id': route.id, 'groupid': group.id }) }}" method="POST">
                                         <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Click to allow access to group '{{ route.name }}'">
                                             <i class="text-danger fa fa-minus-circle"></i>
                                         </button>
@@ -64,14 +64,53 @@
                     </tr>
                 {% endfor %}
             </tbody>
-            <tfoot>
+        </table>
+        <table class="table table-hover">
+            <thead>
                 <tr>
-                    <th></th>
+                    <th>Action permissions</th>
                         {% for group in groups %}
                         <th class="text-center" style="width: 1px;">{{ group.name }}</th>
                         {% endfor %}
                 </tr>
-            </tfoot>
+            </thead>
+            <tbody>
+                {% for action in actions %}
+                    <tr>
+                        <td>
+                            <form action="{{ url('acl_action', {'type': 'remove', 'actionid': action.id}) }}" method="POST" class="pull-left">
+                                <button type="submit" class="btn-link btn-xs" data-toggle="tooltip" data-placement="top" title="Click to action route '{{ action.name }}'">
+                                    <i class="text-muted fa fa-trash"></i>
+                                </button>
+                            </form>
+                            <strong class="text-primary">
+                                {{ action.name }}
+                            </strong>
+                            &nbsp;
+                            <small class="text-muted">
+                                {{ action.description }}
+                            </small>
+                        </td>
+                        {% for group in action.groups %}
+                            <td class="text-center">
+                                {% if group.access %}
+                                    <form action="{{ url('acl_change',{'table':'action', 'type': 'deny', 'id': action.id, 'groupid': group.id }) }}" method="POST">
+                                        <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Click to deny access to group '{{ route.name }}'">
+                                            <i class="text-success fa fa-check-circle"></i>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <form action="{{ url('acl_change',{'table':'action', 'type': 'allow', 'id': action.id, 'groupid': group.id }) }}" method="POST">
+                                        <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Click to allow access to group '{{ route.name }}'">
+                                            <i class="text-danger fa fa-minus-circle"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             {% for group in members %}

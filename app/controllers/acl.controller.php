@@ -13,24 +13,43 @@ class ACLController extends Controller {
 
     public function index() {
         $this->bind('groups', $this->dao->groups());
-        $this->bind('routes', $this->dao->matrix());
+        $this->bind('routes', $this->dao->routesMatrix());
         $this->bind('members', $this->dao->members());
         $this->bind('users', $this->dao->users());
+        $this->bind('actions', $this->dao->actionsMatrix());
         $this->bind('navigation', $this->dao('navigation')->getItems());
         $this->view('default')->acl($this->getBinds());
     }
 
     public function change() {
-        switch ($this->parameter('type')):
-            case 'allow':
-                $this->dao->allowGroup(
-                        $this->parameter('routeid'), $this->parameter('groupid')
-                );
+        switch ($this->parameter('table')):
+            case 'action':
+                switch ($this->parameter('type')):
+                    case 'allow':
+                        $this->dao->allowActionGroup(
+                                $this->parameter('id'), $this->parameter('groupid')
+                        );
+                        break;
+                    case 'deny':
+                        $this->dao->denyActionGroup(
+                                $this->parameter('id'), $this->parameter('groupid')
+                        );
+                        break;
+                endswitch;
                 break;
-            case 'deny':
-                $this->dao->denyGroup(
-                        $this->parameter('routeid'), $this->parameter('groupid')
-                );
+            case 'route':
+                switch ($this->parameter('type')):
+                    case 'allow':
+                        $this->dao->allowRouteGroup(
+                                $this->parameter('id'), $this->parameter('groupid')
+                        );
+                        break;
+                    case 'deny':
+                        $this->dao->denyRouteGroup(
+                                $this->parameter('id'), $this->parameter('groupid')
+                        );
+                        break;
+                endswitch;
                 break;
         endswitch;
         $this->index();
@@ -74,6 +93,17 @@ class ACLController extends Controller {
             case 'remove':
                 $this->dao->removeRoute(
                         $this->parameter('routeid')
+                );
+                break;
+        }
+        $this->index();
+    }
+
+    public function action() {
+        switch ($this->parameter('type')) {
+            case 'remove':
+                $this->dao->removeAction(
+                        $this->parameter('actionid')
                 );
                 break;
         }

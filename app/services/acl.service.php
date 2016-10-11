@@ -11,7 +11,14 @@ class ACLService extends Service {
     private $userid = 0;
     private $route, $errorRoute = '';
 
+    const ACL_HASACCESS = 'hasAccess';
+
+    private $test = array(
+        ACL_HASACCESS => ''
+    );
+
     public function run() {
+        $this->requires('authentication');
         $this->route = $this->getRoute();
         $this->errorRoute = $this->getErrorRoute();
         $this->userid = $this->getUserID();
@@ -33,6 +40,20 @@ class ACLService extends Service {
             $userid = $this->getUserID();
         endif;
         return !$this->access($route, $userid);
+    }
+
+    public function can($action, $userid = NULL) { // actions
+        if (is_null($userid)):
+            $userid = $this->getUserID();
+        endif;
+        return $this->dao('acl')->action($action, $userid);
+    }
+
+    public function cannot($action, $userid = NULL) { // actions
+        if (is_null($userid)):
+            $userid = $this->getUserID();
+        endif;
+        return !$this->can($action, $userid);
     }
 
     private function isAllowed($route, $userid) {

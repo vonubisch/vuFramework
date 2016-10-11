@@ -22,6 +22,9 @@ class IndexController extends Controller {
     }
 
     public function home() {
+        if($this->service('acl')->can('hasAccess')):
+            Debug::console('Has access');
+        endif;
         $this->bind('navigation', $this->dao('navigation')->getItems());
         $this->view('default')->home($this->getBinds());
     }
