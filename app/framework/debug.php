@@ -80,10 +80,26 @@ class Debug {
     }
 
     public static function log($data) {
+        if (error_reporting() === 0):
+            return;
+        endif;
         file_put_contents(Configuration::path('logs', 'debug'), print_r($data, true));
     }
 
+    public static function logPerformance($status) {
+        if (error_reporting() === 0):
+            return;
+        endif;
+        $size = memory_get_peak_usage(true);
+        $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+        $log = round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i] . ' ' . $status;
+        file_put_contents('app/logs/performance.log', $log . PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+
     public static function getLog($file) {
+        if (error_reporting() === 0):
+            return '';
+        endif;
         $lines = array(0 => 'd');
         $handle = fopen(Configuration::path('logs', $file), "r");
         if ($handle) {

@@ -11,12 +11,6 @@ class ACLService extends Service {
     private $userid = 0;
     private $route, $errorRoute = '';
 
-    const ACL_HASACCESS = 'hasAccess';
-
-    private $test = array(
-        ACL_HASACCESS => ''
-    );
-
     public function run() {
         $this->requires('authentication');
         $this->route = $this->getRoute();

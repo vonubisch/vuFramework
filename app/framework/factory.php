@@ -18,6 +18,7 @@ class Factory {
         $object->{Configuration::read('magic.constructor')}();
         self::checkMethod($object, $method);
         $object->{$method}();
+        Debug::logPerformance('Factory built controller ' . $name);
         return $object;
     }
 
@@ -33,6 +34,7 @@ class Factory {
         if (method_exists($object, Configuration::read('magic.constructor'))):
             $object->{Configuration::read('magic.constructor')}();
         endif;
+        Debug::logPerformance('Factory built model ' . $name);
         return $object;
     }
 
@@ -42,6 +44,7 @@ class Factory {
         $object = new $classname();
         self::checkMethod($object, Configuration::read('magic.constructor'));
         $object->{Configuration::read('magic.constructor')}();
+        Debug::logPerformance('Factory built view ' . $name);
         return $object;
     }
 
@@ -51,11 +54,13 @@ class Factory {
         $object = new $classname();
         self::checkMethod($object, Configuration::read('magic.constructor'));
         $object->{Configuration::read('magic.constructor')}();
+        Debug::logPerformance('Factory built service ' . $name);
         return $object;
     }
 
     public static function helper($name) {
         self::load(__FUNCTION__, $name);
+        Debug::logPerformance('Factory built helper ' . $name);
     }
 
     public static function language($name) {
@@ -64,6 +69,7 @@ class Factory {
         else:
             throw new FactoryException(Exceptions::FILENOTFOUND . $name);
         endif;
+        Debug::logPerformance('Factory built language ' . $name);
     }
 
     public static function library($name) {
@@ -72,6 +78,7 @@ class Factory {
         else:
             throw new FactoryException(Exceptions::FILENOTFOUND . $name);
         endif;
+        Debug::logPerformance('Factory built library ' . $name);
     }
 
     public static function dao($name) {
@@ -80,6 +87,7 @@ class Factory {
         $object = new $classname();
         self::checkMethod($object, Configuration::read('magic.constructor'));
         $object->{Configuration::read('magic.constructor')}();
+        Debug::logPerformance('Factory built DAO ' . $name);
         return $object;
     }
 
@@ -89,6 +97,7 @@ class Factory {
         $object = new $classname();
         self::checkMethod($object, Configuration::read('magic.constructor'));
         $object->{Configuration::read('magic.constructor')}($options);
+        Debug::logPerformance('Factory built driver ' . $name);
         return $object;
     }
 
@@ -98,6 +107,7 @@ class Factory {
         $object = new $classname();
         self::checkMethod($object, Configuration::read('magic.constructor'));
         $object->{Configuration::read('magic.constructor')}($options);
+        Debug::logPerformance('Factory built renderer ' . $name);
         return $object;
     }
 

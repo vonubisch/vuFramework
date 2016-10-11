@@ -22,17 +22,27 @@ class Application {
 
     public function __construct($config) {
         try {
+            Debug::logPerformance('Application constructed');
             Configuration::init($config);
+            Debug::logPerformance('Configuration initialized');
             Configuration::write('enviroment', $this->setEnviroment(Configuration::get('enviroments')));
+            Debug::logPerformance('Written enviroment config');
             $this->handleShutdown(Configuration::read('enviroment.shutdown'));
+            Debug::logPerformance('Handled any shutdowns');
             $this->setErrors(Configuration::read('enviroment.errors'));
+            Debug::logPerformance('Debugging set');
             $this->setLogging(Configuration::read('enviroment.logging'));
+            Debug::logPerformance('Logging set');
             Router::init(
                     Configuration::get('routes'), Configuration::read('enviroment.folder'), Configuration::read('enviroment.errorroute')
             );
+            Debug::logPerformance('Router initialized');
             Configuration::write('route', Router::data());
+            Debug::logPerformance('Router configuration data written');
             Request::init();
+            Debug::logPerformance('Request initialized');
             Configuration::write('request', Request::data());
+            Debug::logPerformance('Request configuration data written');
         } catch (Exceptions $error) {
             $error->show(
                     Configuration::read('enviroment.errors'), Configuration::read('paths.errorlog'), Configuration::readAll()
@@ -42,13 +52,15 @@ class Application {
 
     public function start() {
         try {
-            
+            Debug::logPerformance('Application start');
             Factory::base('framework');
             Databases::init(Configuration::get('databases'));
-
+            Debug::logPerformance('Databases initialized');
             Services::init(Configuration::read('services'));
-
+            Debug::logPerformance('Services initialized');
             Factory::controller(Configuration::read('route.controller'), Configuration::read('route.method'));
+            Debug::logPerformance('Controller dispatched');
+            Debug::logPerformance('---');
         } catch (Exceptions $error) {
             $error->show(
                     Configuration::read('enviroment.errors'), Configuration::read('paths.errorlog'), Configuration::readAll()
